@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "module": "esnext",
+    "target": "esnext",
+    "allowJs": true,
+    "checkJs": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictNullChecks": true, 
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "downlevelIteration": true,
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*"],
+  "typedocOptions": {
+    "out": "docs",
+    "inputFiles":["./src"],
+    "mode": "module",
+    "ignoreCompilerErrors": true,
+    "excludeNotExported": true
+  }
+}
