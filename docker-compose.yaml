@@ -1,0 +1,38 @@
+#Use for development purposes only!
+
+version: "3.9"
+services: 
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    container_name: InvestmentsAPI
+    depends_on: 
+      - db
+    volumes: 
+      - ./api/src:/home/app/src
+      - ./api/public:/home/app/public
+    ports:
+      - 3001:80
+    env_file: ./api/.env
+    environment:
+      PORT: 80
+
+      DB_HOST: db
+      DB_USER: admin
+      DB_PASSWORD: dc1cfeafb95b00bf8195a04c60b0988cbfe02d
+      DB_DATABASE: Investments
+      DB_PORT: 3306
+      DB_LOGGING: "false"
+
+  db:
+    image: mysql
+    container_name: InvestmentsDB
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: dc1cfeafb95b00bf8195a04c60b0988cbfe02d
+      MYSQL_ROOT_PASSWORD: dc1cfeafb95b00bf8195a04c60b0988cbfe02d
+      MYSQL_DATABASE: Investments
+    ports:
+      - 3306:3306
+
