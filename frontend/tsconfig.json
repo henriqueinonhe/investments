@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "module": "esnext",
+    "target": "es5",
+    "jsx": "react",
+    "allowJs": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictNullChecks": true, 
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "downlevelIteration": true,
+    "resolveJsonModule": true
+  },
+  "exclude": ["node_modules"],
+  "typedocOptions": {
+    "out": "docs",
+    "inputFiles":["./src"],
+    "mode": "module",
+    "ignoreCompilerErrors": true,
+    "excludeNotExported": true
+  }
+}
