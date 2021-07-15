@@ -7,8 +7,6 @@ COPY . .
 RUN npm ci
 RUN npx tsc -p .
 
-WORKDIR /home/app/dist
-
 EXPOSE 80
 
-CMD ["node", "index.js"]
+CMD ["node", "./dist/index.js"]
