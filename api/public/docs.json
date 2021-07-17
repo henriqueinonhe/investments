@@ -87,7 +87,7 @@
       ],
       "post": {
         "summary": "Create Investment",
-        "operationId": "post-userId-investments",
+        "operationId": "post-investments",
         "responses": {
           "201": {
             "description": "Created",
@@ -143,11 +143,11 @@
             }
           }
         },
-        "operationId": "get-userId-investments-investmentId"
+        "operationId": "get-investments-investmentId"
       },
       "put": {
         "summary": "Update Investment",
-        "operationId": "put-userId-investments-investmentId",
+        "operationId": "put-investments-investmentId",
         "responses": {
           "200": {
             "description": "OK",
@@ -175,7 +175,7 @@
       },
       "delete": {
         "summary": "Delete Investment",
-        "operationId": "delete-userId-investments-investmentId",
+        "operationId": "delete-investments-investmentId",
         "responses": {
           "200": {
             "description": "OK",
@@ -203,9 +203,6 @@
           "id": {
             "type": "string"
           },
-          "user": {
-            "type": "string"
-          },
           "identifier": {
             "type": "string"
           },
@@ -224,9 +221,6 @@
         "title": "WriteInvestment",
         "type": "object",
         "properties": {
-          "user": {
-            "type": "string"
-          },
           "identifier": {
             "type": "string"
           },
