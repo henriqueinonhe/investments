@@ -22,5 +22,20 @@ services:
     env_file: ./db/.env
     ports:
       - 3306:3306
+
+  frontend:
+    container_name: InvestmentsFrontend
+    build:
+      context: ./frontend
+    depends_on:
+      - api
+    volumes:
+      - ./frontend:/home/app
+      - /home/app/node_modules
+    environment: 
+      SOCK_PORT: 3000
+    ports:
+      - 3000:80
+    command: npm run dev-start
     
 
