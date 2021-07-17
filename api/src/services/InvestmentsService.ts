@@ -147,6 +147,9 @@ export class InvestmentsService {
         type: In(types),
         date: Between(startDate, endDate)
       },
+      order: {
+        date: "ASC"
+      },
       skip: perPage * (page - 1),
       take: perPage
     });
