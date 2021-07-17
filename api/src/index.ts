@@ -4,6 +4,7 @@ import { createConnection } from "typeorm";
 import { handleError } from "./middlewares/handleError";
 import { router } from "./routes";
 import { env } from "./env";
+import cors from "cors";
 
 (async () => {
   try {
@@ -16,6 +17,7 @@ import { env } from "./env";
   const app = express();
   app.use(express.json());
   app.use(express.static("public"));
+  app.use(cors());
   
   app.get("/health", (req, res) => {
     res.send("Ok");
