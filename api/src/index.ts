@@ -1,11 +1,9 @@
 import express from "express";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
-import dotenv from "dotenv";
 import { handleError } from "./middlewares/handleError";
 import { router } from "./routes";
-
-dotenv.config();
+import { env } from "./env";
 
 (async () => {
   try {
@@ -26,7 +24,7 @@ dotenv.config();
   app.use(router);
   app.use(handleError);
   
-  app.listen(process.env.PORT, () => {
+  app.listen(env.PORT, () => {
     console.log(`Server up at ${process.env.PORT}!`);
   });
 })();
