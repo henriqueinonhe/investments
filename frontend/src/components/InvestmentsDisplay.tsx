@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { Investment } from "../services/InvestmentsServices";
-import RandExp from "randexp";
-import { sample, random, groupBy } from "lodash";
+import { Investment, InvestmentsService } from "../services/InvestmentsServices";
+import { groupBy } from "lodash";
 import { InvestmentGroup } from "./InvestmentGroup";
+import { useIsMounted, useAsync } from "@henriqueinonhe/react-hooks";
 
 const Container = styled.ul`
   overflow-y: scroll;
@@ -29,17 +29,15 @@ function groupInvestmentsByDate(investments : Array<Investment>) : Array<Investm
 
 export function InvestmentsDisplay() : JSX.Element {
   const [investments, setInvestments] = useState<Array<Investment>>([]);
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const isMounted = useIsMounted();
 
-  useEffect(() => {
-    //MOCK
-    setInvestments(new Array(20).fill(null).map(() => ({
-      id: new RandExp(/\w{32}/).gen(),
-      identifier: new RandExp(/\w{4,20}/).gen(),
-      type: sample(["FIXED", "VARIABLE"])!,
-      value: random(5000, 100, true),
-      date: new RandExp(/2021-01-0[1-9]/).gen()
-    })));
-  }, []);
+  useAsync(isMounted, async () => {
+    return await InvestmentsService.getInvestments({page: 2});
+  }, (data) => {
+    setInvestments(data.data);
+  }, [], setIsLoading);
 
   const investmentGroups = groupInvestmentsByDate(investments);
 

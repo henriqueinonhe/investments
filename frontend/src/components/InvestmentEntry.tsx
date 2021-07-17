@@ -20,11 +20,11 @@ const InvestmentIdentifierField = styled(InvestmentBaseField)`
   /* overflow-wrap: anywhere; */
   text-overflow: ellipsis;
   overflow: hidden;
-  
 `;
 
 const InvestmentValueField = styled(InvestmentBaseField)`
   margin-left: 12px;
+  white-space: nowrap;
 `;
 
 export interface InvestmentyEntryProps {
@@ -45,7 +45,7 @@ export const InvestmentEntry = React.memo((props : InvestmentyEntryProps) => {
       <InvestmentTypeField>{t(displayableInvestmentType)}</InvestmentTypeField>
       <InvestmentIdentifierField>{investment.identifier}</InvestmentIdentifierField>
       {/* FORMAT CURRENCY! */}
-      <InvestmentValueField>{investment.value.toFixed(2)}</InvestmentValueField>
+      <InvestmentValueField>{`R$ ${investment.value.toFixed(2).toString()}`}</InvestmentValueField>
     </Container>
   );
 });

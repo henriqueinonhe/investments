@@ -55,7 +55,7 @@ export class InvestmentsService {
         .required(),
       
       type: Joi.string()
-        .allow("VARIABLE", "FIXED")
+        .valid("VARIABLE", "FIXED")
         .required(),
 
       value: Joi.number()
@@ -147,6 +147,9 @@ export class InvestmentsService {
         type: In(types),
         date: Between(startDate, endDate)
       },
+      order: {
+        date: "ASC"
+      },
       skip: perPage * (page - 1),
       take: perPage
     });
@@ -166,7 +169,8 @@ export class InvestmentsService {
     const querySchema = Joi.object({
       user: Joi.string().required(),
 
-      identifier: Joi.string(),
+      identifier: Joi.string()
+        .allow(""),
 
       types: Joi.array()
         .items(Joi.string()),
@@ -182,7 +186,7 @@ export class InvestmentsService {
         .positive()
         .max(50)
       
-    }).required();
+    });
 
     const { error } = querySchema.validate(query);
 
