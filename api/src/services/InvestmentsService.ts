@@ -1,17 +1,16 @@
 import { Investment, InvestmentType } from "../entities/Investment";
 import { ValidationError, ValidationErrorEntry } from "../exceptions/ValidationError";
 import { InvestmentsRepository } from "../repositories/InvestmentsRepository";
-import { capitalize } from "lodash";
+import { capitalize, merge } from "lodash";
 import { Between, getCustomRepository, ILike, In } from "typeorm";
 import { defaults } from "lodash";
 import { computeLastPage, defaultEndDate, defaultStartDate, PaginatedEntity } from "../helpers/utils";
-import { ResourceNotFoundError } from "../exceptions/ResourceNotFoundError";
 
 export interface CreateInvestmentData {
   identifier ?: string;
   type ?: InvestmentType;
   value ?: number;
-  date ?: string;
+  date ?: Date;
 }
 
 export interface GetInvestmentsQuery {
@@ -22,6 +21,8 @@ export interface GetInvestmentsQuery {
   page ?: number;
   perPage ?: number;
 }
+
+export type UpdateInvestmentData = CreateInvestmentData;
 
 export class InvestmentsService {
   public static async createInvestment(investment : CreateInvestmentData) : Promise<Investment> {
@@ -40,7 +41,7 @@ export class InvestmentsService {
     return createdInvestment;
   }
 
-  private static async validateCreateInvestmentData(investment : CreateInvestmentData) : Promise<Array<ValidationErrorEntry>> {
+  private static validateInvestmentData(investment : Partial<Investment>) : Array<ValidationErrorEntry> {
     const validationErrorEntries : Array<ValidationErrorEntry> = [];
     
     for(const key in investment) {
@@ -74,6 +75,13 @@ export class InvestmentsService {
       });
     }
 
+    return validationErrorEntries;
+  }
+
+  private static async validateCreateInvestmentData(investment : CreateInvestmentData) : Promise<Array<ValidationErrorEntry>> {
+    const validationErrorEntries : Array<ValidationErrorEntry> = [];
+    validationErrorEntries.push(...this.validateInvestmentData(investment));
+
     const investmentsRepository = getCustomRepository(InvestmentsRepository);
     const duplicateInvestments = await investmentsRepository.find({
       ...investment
@@ -86,6 +94,13 @@ export class InvestmentsService {
         code: "InvestmentAlreadyExists"
       });
     }
+
+    return validationErrorEntries;
+  }
+
+  private static validateUpdateInvestmentData(investment : UpdateInvestmentData) : Array<ValidationErrorEntry> {
+    const validationErrorEntries : Array<ValidationErrorEntry> = [];
+    validationErrorEntries.push(...this.validateInvestmentData(investment));
 
     return validationErrorEntries;
   }
@@ -174,31 +189,33 @@ export class InvestmentsService {
 
   public static async getInvestmentById(id : string) : Promise<Investment> {
     const investmentsRepository = getCustomRepository(InvestmentsRepository);
-    const fetchedInvestment = await investmentsRepository.findOne({
-      where: { id }
-    });
-
-    if(fetchedInvestment === undefined) {
-      throw new ResourceNotFoundError(`There is no Investment associated with the id "${id}"`,
-                                      "InvestmentNotFound");
-    }
+    const fetchedInvestment = await investmentsRepository.findById(id);
 
     return fetchedInvestment;
   }
 
   public static async deleteInvestment(id : string) : Promise<Investment> {
     const investmentsRepository = getCustomRepository(InvestmentsRepository);
-    const investmentToBeDeleted = await investmentsRepository.findOne({
-      where: { id }
-    });
-
-    if(investmentToBeDeleted === undefined) {
-      throw new ResourceNotFoundError(`There is no Investment associated with the id "${id}"`,
-                                      "InvestmentNotFound");
-    }
-
+    const investmentToBeDeleted = await investmentsRepository.findById(id);
     await investmentsRepository.delete(id);
 
     return investmentToBeDeleted;
+  }
+
+  public static async updateInvestment(id : string, investment : Omit<Investment, "id">) : Promise<Investment> {
+    const validationErrorEntries = this.validateUpdateInvestmentData(investment);
+
+    if(validationErrorEntries.length !== 0) {
+      throw new ValidationError("Failed to create Investment due to invalid data!", 
+                                "InvalidCreateInvestmentData",
+                                validationErrorEntries);
+    }
+    
+    const investmentsRepository = getCustomRepository(InvestmentsRepository);
+    const investmentToBeUpdated = await investmentsRepository.findById(id);
+    const updatedInvestment = merge(investmentToBeUpdated, investment);
+    await investmentsRepository.save(updatedInvestment);
+
+    return updatedInvestment;
   }
 }
