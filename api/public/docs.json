@@ -203,6 +203,9 @@
           "id": {
             "type": "string"
           },
+          "user": {
+            "type": "string"
+          },
           "identifier": {
             "type": "string"
           },
@@ -221,6 +224,9 @@
         "title": "WriteInvestment",
         "type": "object",
         "properties": {
+          "user": {
+            "type": "string"
+          },
           "identifier": {
             "type": "string"
           },

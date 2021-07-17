@@ -21,6 +21,9 @@ export class Investment {
   public date : Date;
 
   @Column()
+  public user : string;
+
+  @Column()
   public createdAt : Date;
 
   @Column()
