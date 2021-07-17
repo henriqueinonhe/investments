@@ -3,7 +3,10 @@ import { InvestmentsService } from "../services/InvestmentsService";
 
 export class InvestmentsController {
   public static getInvestments = wrapAsyncController(async (req, res, next) => {
-    const query = req.query;
+    const query = {
+      ...req.query,
+      user: res.locals.authenticatedUser ?? "Jarles" //TODO
+    };
     const fetchedInvestments = await InvestmentsService.getInvestments(query);
 
     res.status(200).send(fetchedInvestments);
@@ -12,14 +15,18 @@ export class InvestmentsController {
 
   public static getInvestmentById = wrapAsyncController(async (req, res, next) => {
     const id = req.params.investmentId!;
-    const fetchedInvestment = await InvestmentsService.getInvestmentById(id);
+    const user = res.locals.authenticatedUser ?? "Jarles"; //TODO;
+    const fetchedInvestment = await InvestmentsService.getInvestmentById(id, user);
 
     res.status(200).send(fetchedInvestment);
     next();
   })
 
   public static createInvestment = wrapAsyncController(async (req, res, next) => {
-    const investment = req.body;
+    const investment = {
+      ...req.body,
+      user: res.locals.authenticatedUser ?? "Jarles" //TODO
+    };
     const createdInvestment = await InvestmentsService.createInvestment(investment);
     
     res.status(201).send(createdInvestment);
@@ -28,7 +35,8 @@ export class InvestmentsController {
 
   public static deleteInvestment = wrapAsyncController(async (req, res, next) => {
     const id = req.params.investmentId!;
-    const deletedInvestment = await InvestmentsService.deleteInvestment(id);
+    const user = res.locals.authenticatedUser ?? "Jarles"; //TODO
+    const deletedInvestment = await InvestmentsService.deleteInvestment(id, user);
 
     res.status(200).send(deletedInvestment);
     next();
@@ -36,7 +44,10 @@ export class InvestmentsController {
 
   public static updateInvestment = wrapAsyncController(async (req, res, next) => {
     const id = req.params.investmentId!;
-    const newInvestment = req.body;
+    const newInvestment = {
+      ...req.body,
+      user: res.locals.authenticatedUser ?? "Jarles" //TODO
+    };
     const updatedInvestment = await InvestmentsService.updateInvestment(id, newInvestment);
 
     res.status(200).send(updatedInvestment);

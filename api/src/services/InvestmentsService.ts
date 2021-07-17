@@ -5,16 +5,20 @@ import { capitalize, merge } from "lodash";
 import { Between, getCustomRepository, ILike, In } from "typeorm";
 import { defaults } from "lodash";
 import { computeLastPage, defaultEndDate, defaultStartDate, PaginatedEntity } from "../helpers/utils";
+import Joi from "joi";
+import { AuthorizationError } from "../exceptions/AuthorizationError";
 
 export interface CreateInvestmentData {
   identifier ?: string;
+  user ?: string;
   type ?: InvestmentType;
   value ?: number;
-  date ?: Date;
+  date ?: string;
 }
 
 export interface GetInvestmentsQuery {
   identifier ?: string;
+  user : string;
   types ?: Array<InvestmentType>;
   startDate ?: string;
   endDate ?: string;
@@ -41,50 +45,53 @@ export class InvestmentsService {
     return createdInvestment;
   }
 
-  private static validateInvestmentData(investment : Partial<Investment>) : Array<ValidationErrorEntry> {
-    const validationErrorEntries : Array<ValidationErrorEntry> = [];
-    
-    for(const key in investment) {
-      if(investment[key as keyof CreateInvestmentData] === undefined) {
-        validationErrorEntries.push({
-          message: `"${key}" is a mandatory field!`,
-          code: `InvestmentMissing${capitalize(key)}Field`
-        });
-      }
+  private static validateInvestmentData(investment : CreateInvestmentData) : Array<ValidationErrorEntry> {
+    const investmentSchema = Joi.object({
+      user: Joi.string()
+        .required(),
+      
+      identifier: Joi.string()
+        .not().empty()
+        .required(),
+      
+      type: Joi.string()
+        .allow("VARIABLE", "FIXED")
+        .required(),
+
+      value: Joi.number()
+        .positive()
+        .required(),
+
+      date: Joi.date()
+        .min(defaultStartDate)
+        .max(defaultEndDate)
+        .required()
+
+    }).required();
+
+    const { error } = investmentSchema.validate(investment);
+      
+    if(error) {
+      return error.details.map((entry) : ValidationErrorEntry => ({
+        code: `InvalidInvestment${capitalize(entry.context!.key)}`,
+        message: entry.message
+      }));
     }
 
-    if(investment.identifier!.trim() === "") {
-      validationErrorEntries.push({
-        message: `"identifier" must not be an empty string!`,
-        code: "EmptyInvestmentIdentifier"
-      });
-    }
-
-    if(investment.type !== "VARIABLE" &&
-       investment.type !== "FIXED") {
-      validationErrorEntries.push({
-        message: `"type" must be either "VARIABLE" or "FIXED", but "${investment.type} was found!"`,
-        code: "InvalidInvestmentType"
-      });
-    }
-
-    if(investment.value! < 0) {
-      validationErrorEntries.push({
-        message: `"value" must be a positive number, but "${investment.value}" was found!`,
-        code: "NegativeInvestmentValue"
-      });
-    }
-
-    return validationErrorEntries;
+    return [];
   }
 
   private static async validateCreateInvestmentData(investment : CreateInvestmentData) : Promise<Array<ValidationErrorEntry>> {
     const validationErrorEntries : Array<ValidationErrorEntry> = [];
     validationErrorEntries.push(...this.validateInvestmentData(investment));
 
+    if(validationErrorEntries.length !== 0) {
+      return validationErrorEntries;
+    }
+
     const investmentsRepository = getCustomRepository(InvestmentsRepository);
     const duplicateInvestments = await investmentsRepository.find({
-      ...investment
+      where: investment
     });
     const investmentAlreadyExists = duplicateInvestments.length !== 0;
 
@@ -105,9 +112,8 @@ export class InvestmentsService {
     return validationErrorEntries;
   }
 
-  public static async getInvestments(query ?: GetInvestmentsQuery) : Promise<PaginatedEntity<Investment>> {
-
-    const transformedQuery = defaults(query ?? {}, {
+  public static async getInvestments(query : GetInvestmentsQuery) : Promise<PaginatedEntity<Investment>> {
+    const transformedQuery = defaults(query, {
       identifier: "",
       types: ["VARIABLE", "FIXED"],
       startDate: defaultStartDate,
@@ -115,17 +121,7 @@ export class InvestmentsService {
       page: 1,
       perPage: 15
     });
-    console.log(transformedQuery?.types);
 
-    const {
-      identifier,
-      types,
-      startDate,
-      endDate,
-      page,
-      perPage
-    } = transformedQuery;
-    
     const validationErrorEntries = this.validateGetInvestmentsQuery(transformedQuery);
     if(validationErrorEntries.length !== 0) {
       throw new ValidationError("Invalid query!",
@@ -133,9 +129,20 @@ export class InvestmentsService {
                                 validationErrorEntries);
     }
 
+    const {
+      user,
+      identifier,
+      types,
+      startDate,
+      endDate,
+      page,
+      perPage
+    } = transformedQuery;
+
     const investmentsRepository = getCustomRepository(InvestmentsRepository);
     const [fetchedInvestments, total] = await investmentsRepository.findAndCount({
       where: {
+        user,
         identifier: ILike(`%${identifier}%`),
         type: In(types),
         date: Between(startDate, endDate)
@@ -156,54 +163,58 @@ export class InvestmentsService {
   }
 
   private static validateGetInvestmentsQuery(query : Required<GetInvestmentsQuery>) : Array<ValidationErrorEntry> {
-    const {
-      page,
-      perPage
-    } = query;
+    const querySchema = Joi.object({
+      page: Joi.number()
+        .positive(),
 
-    const validationErrorEntries : Array<ValidationErrorEntry> = [];
+      perPage: Joi.number()
+        .positive()
+        .max(50)
+      
+    }).required();
 
-    if(page < 1) {
-      validationErrorEntries.push({
-        message: `"page" is expected to be a positive number, but "${page}" was found!`,
-        code: "NonPositivePage"
-      });
+    const { error } = querySchema.validate(query);
+
+    if(error) {
+      return error.details.map(entry => ({
+        message: entry.message,
+        code: `InvalidInvestmentQuery${entry.context!.key}`
+      }));
     }
 
-    if(perPage < 1) {
-      validationErrorEntries.push({
-        message: `"perPage" is expected to be a positive number, but "${perPage}" was found!`,
-        code: "NonPositivePerPage"
-      });
-    }
-
-    if(perPage > 50) {
-      validationErrorEntries.push({
-        message: `"perPage" cannot be greater than 50, but "${perPage}" was found!`,
-        code: "PerPageTooHigh"
-      });
-    }
-
-    return validationErrorEntries;
+    return [];
   }
 
-  public static async getInvestmentById(id : string) : Promise<Investment> {
+  private static checkInvestmentUserMacthes(investment : Investment, user : string) : void {
+    if(investment.user !== user) {
+      throw new AuthorizationError("This investment doesn't belong to you!",
+                                   "InvestmentUserMismatch");
+    }
+  }
+
+  public static async getInvestmentById(id : string, user : string) : Promise<Investment> {
     const investmentsRepository = getCustomRepository(InvestmentsRepository);
     const fetchedInvestment = await investmentsRepository.findById(id);
+    this.checkInvestmentUserMacthes(fetchedInvestment, user);
 
     return fetchedInvestment;
   }
 
-  public static async deleteInvestment(id : string) : Promise<Investment> {
+  public static async deleteInvestment(id : string, user : string) : Promise<Investment> {
     const investmentsRepository = getCustomRepository(InvestmentsRepository);
     const investmentToBeDeleted = await investmentsRepository.findById(id);
+    this.checkInvestmentUserMacthes(investmentToBeDeleted, user);
+
     await investmentsRepository.delete(id);
 
     return investmentToBeDeleted;
   }
 
   public static async updateInvestment(id : string, investment : Omit<Investment, "id">) : Promise<Investment> {
-    const validationErrorEntries = this.validateUpdateInvestmentData(investment);
+    const validationErrorEntries = this.validateUpdateInvestmentData({
+      ...investment,
+      date: investment.date.toISOString()
+    });
 
     if(validationErrorEntries.length !== 0) {
       throw new ValidationError("Failed to create Investment due to invalid data!", 
@@ -213,6 +224,8 @@ export class InvestmentsService {
     
     const investmentsRepository = getCustomRepository(InvestmentsRepository);
     const investmentToBeUpdated = await investmentsRepository.findById(id);
+    this.checkInvestmentUserMacthes(investmentToBeUpdated, investment.user);
+
     const updatedInvestment = merge(investmentToBeUpdated, investment);
     await investmentsRepository.save(updatedInvestment);
 
