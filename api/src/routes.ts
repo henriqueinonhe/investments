@@ -9,4 +9,5 @@ router.route("/users/:userId/investments")
 
 router.route("/users/:userId/investments/:investmentId")
   .get(InvestmentsController.getInvestmentById)
+  .put(InvestmentsController.updateInvestment)
   .delete(InvestmentsController.deleteInvestment);

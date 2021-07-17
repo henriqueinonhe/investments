@@ -33,4 +33,13 @@ export class InvestmentsController {
     res.status(200).send(deletedInvestment);
     next();
   });
+
+  public static updateInvestment = wrapAsyncController(async (req, res, next) => {
+    const id = req.params.investmentId!;
+    const newInvestment = req.body;
+    const updatedInvestment = await InvestmentsService.updateInvestment(id, newInvestment);
+
+    res.status(200).send(updatedInvestment);
+    next();
+  });
 }
