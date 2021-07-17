@@ -15,7 +15,8 @@ export class InvestmentsController {
 
   public static getInvestmentById = wrapAsyncController(async (req, res, next) => {
     const id = req.params.investmentId!;
-    const fetchedInvestment = await InvestmentsService.getInvestmentById(id);
+    const user = res.locals.authenticatedUser ?? "Jarles"; //TODO;
+    const fetchedInvestment = await InvestmentsService.getInvestmentById(id, user);
 
     res.status(200).send(fetchedInvestment);
     next();
@@ -34,7 +35,8 @@ export class InvestmentsController {
 
   public static deleteInvestment = wrapAsyncController(async (req, res, next) => {
     const id = req.params.investmentId!;
-    const deletedInvestment = await InvestmentsService.deleteInvestment(id);
+    const user = res.locals.authenticatedUser ?? "Jarles"; //TODO
+    const deletedInvestment = await InvestmentsService.deleteInvestment(id, user);
 
     res.status(200).send(deletedInvestment);
     next();
@@ -42,7 +44,10 @@ export class InvestmentsController {
 
   public static updateInvestment = wrapAsyncController(async (req, res, next) => {
     const id = req.params.investmentId!;
-    const newInvestment = req.body;
+    const newInvestment = {
+      ...req.body,
+      user: res.locals.authenticatedUser ?? "Jarles" //TODO
+    };
     const updatedInvestment = await InvestmentsService.updateInvestment(id, newInvestment);
 
     res.status(200).send(updatedInvestment);

@@ -6,6 +6,7 @@ import { Between, getCustomRepository, ILike, In } from "typeorm";
 import { defaults } from "lodash";
 import { computeLastPage, defaultEndDate, defaultStartDate, PaginatedEntity } from "../helpers/utils";
 import Joi from "joi";
+import { AuthorizationError } from "../exceptions/AuthorizationError";
 
 export interface CreateInvestmentData {
   identifier ?: string;
@@ -184,16 +185,26 @@ export class InvestmentsService {
     return [];
   }
 
-  public static async getInvestmentById(id : string) : Promise<Investment> {
+  private static checkInvestmentUserMacthes(investment : Investment, user : string) : void {
+    if(investment.user !== user) {
+      throw new AuthorizationError("This investment doesn't belong to you!",
+                                   "InvestmentUserMismatch");
+    }
+  }
+
+  public static async getInvestmentById(id : string, user : string) : Promise<Investment> {
     const investmentsRepository = getCustomRepository(InvestmentsRepository);
     const fetchedInvestment = await investmentsRepository.findById(id);
+    this.checkInvestmentUserMacthes(fetchedInvestment, user);
 
     return fetchedInvestment;
   }
 
-  public static async deleteInvestment(id : string) : Promise<Investment> {
+  public static async deleteInvestment(id : string, user : string) : Promise<Investment> {
     const investmentsRepository = getCustomRepository(InvestmentsRepository);
     const investmentToBeDeleted = await investmentsRepository.findById(id);
+    this.checkInvestmentUserMacthes(investmentToBeDeleted, user);
+
     await investmentsRepository.delete(id);
 
     return investmentToBeDeleted;
@@ -213,6 +224,8 @@ export class InvestmentsService {
     
     const investmentsRepository = getCustomRepository(InvestmentsRepository);
     const investmentToBeUpdated = await investmentsRepository.findById(id);
+    this.checkInvestmentUserMacthes(investmentToBeUpdated, investment.user);
+
     const updatedInvestment = merge(investmentToBeUpdated, investment);
     await investmentsRepository.save(updatedInvestment);
 
