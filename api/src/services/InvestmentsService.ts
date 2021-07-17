@@ -174,17 +174,31 @@ export class InvestmentsService {
 
   public static async getInvestmentById(id : string) : Promise<Investment> {
     const investmentsRepository = getCustomRepository(InvestmentsRepository);
-    const fetchedInvestments = await investmentsRepository.find({
-      where: {
-        id
-      }
+    const fetchedInvestment = await investmentsRepository.findOne({
+      where: { id }
     });
 
-    if(fetchedInvestments.length === 0) {
+    if(fetchedInvestment === undefined) {
       throw new ResourceNotFoundError(`There is no Investment associated with the id "${id}"`,
                                       "InvestmentNotFound");
     }
 
-    return fetchedInvestments[0];
+    return fetchedInvestment;
+  }
+
+  public static async deleteInvestment(id : string) : Promise<Investment> {
+    const investmentsRepository = getCustomRepository(InvestmentsRepository);
+    const investmentToBeDeleted = await investmentsRepository.findOne({
+      where: { id }
+    });
+
+    if(investmentToBeDeleted === undefined) {
+      throw new ResourceNotFoundError(`There is no Investment associated with the id "${id}"`,
+                                      "InvestmentNotFound");
+    }
+
+    await investmentsRepository.delete(id);
+
+    return investmentToBeDeleted;
   }
 }
