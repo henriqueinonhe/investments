@@ -14,6 +14,7 @@ const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const CompressionPlugin = require("compression-webpack-plugin");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 
+
 //Initializing Environment Variables
 dotenv.config();
 const environmentVariables = [];
@@ -152,7 +153,15 @@ const config = env => {
       //Serves index.html to every route (client side routing)
       historyApiFallback: true,
       https: true,
-      port: 8080
+      port: process.env.PORT,
+
+      //To be accessible from places other than localhost
+      host: '0.0.0.0',
+      disableHostCheck: true,
+      watchOptions: {
+        poll: true 
+      },
+      sockPort: process.env.SOCK_PORT ?? process.env.PORT
     },
     watchOptions: {
       ignored: /cypress/
