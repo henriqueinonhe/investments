@@ -3,11 +3,11 @@ import { InvestmentsController } from "./controllers/InvestmentsController";
 
 export const router = Router();
 
-router.route("/users/:userId/investments")
+router.route("/investments")
   .get(InvestmentsController.getInvestments)
   .post(InvestmentsController.createInvestment);
 
-router.route("/users/:userId/investments/:investmentId")
+router.route("/investments/:investmentId")
   .get(InvestmentsController.getInvestmentById)
   .put(InvestmentsController.updateInvestment)
   .delete(InvestmentsController.deleteInvestment);

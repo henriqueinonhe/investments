@@ -15,7 +15,7 @@
     }
   ],
   "paths": {
-    "/users/{userId}/investments": {
+    "/investments": {
       "get": {
         "summary": "Get Investments",
         "tags": [
@@ -84,14 +84,6 @@
         ]
       },
       "parameters": [
-        {
-          "schema": {
-            "type": "string"
-          },
-          "name": "userId",
-          "in": "path",
-          "required": true
-        }
       ],
       "post": {
         "summary": "Create Investment",
@@ -123,16 +115,8 @@
         ]
       }
     },
-    "/users/{userId}/investments/{investmentId}": {
+    "/investments/{investmentId}": {
       "parameters": [
-        {
-          "schema": {
-            "type": "string"
-          },
-          "name": "userId",
-          "in": "path",
-          "required": true
-        },
         {
           "schema": {
             "type": "string"
