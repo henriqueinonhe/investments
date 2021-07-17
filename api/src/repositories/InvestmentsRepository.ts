@@ -3,5 +3,4 @@ import { Investment } from "../entities/Investment";
 
 @EntityRepository(Investment)
 export class InvestmentsRepository extends Repository<Investment> {
-
 }
