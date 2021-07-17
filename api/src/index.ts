@@ -25,6 +25,6 @@ import { env } from "./env";
   app.use(handleError);
   
   app.listen(env.PORT, () => {
-    console.log(`Server up at ${process.env.PORT}!`);
+    console.log(`API up at ${process.env.PORT}!`);
   });
 })();
