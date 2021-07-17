@@ -10,6 +10,8 @@ services:
       - db
     volumes: 
       - ./api:/home/app
+      - /home/app/node_modules
+      - /home/app/dist
     ports:
       - 3001:80
     command: npm run watchAndRun
