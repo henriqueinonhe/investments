@@ -164,6 +164,17 @@ export class InvestmentsService {
 
   private static validateGetInvestmentsQuery(query : Required<GetInvestmentsQuery>) : Array<ValidationErrorEntry> {
     const querySchema = Joi.object({
+      user: Joi.string().required(),
+
+      identifier: Joi.string(),
+
+      types: Joi.array()
+        .items(Joi.string()),
+
+      startDate: Joi.date(),
+
+      endDate: Joi.date(),
+
       page: Joi.number()
         .positive(),
 
@@ -178,14 +189,14 @@ export class InvestmentsService {
     if(error) {
       return error.details.map(entry => ({
         message: entry.message,
-        code: `InvalidInvestmentQuery${entry.context!.key}`
+        code: `InvalidInvestmentQuery${capitalize(entry.context!.key)}`
       }));
     }
 
     return [];
   }
 
-  private static checkInvestmentUserMacthes(investment : Investment, user : string) : void {
+  private static checkInvestmentUserMatches(investment : Investment, user : string) : void {
     if(investment.user !== user) {
       throw new AuthorizationError("This investment doesn't belong to you!",
                                    "InvestmentUserMismatch");
@@ -195,7 +206,7 @@ export class InvestmentsService {
   public static async getInvestmentById(id : string, user : string) : Promise<Investment> {
     const investmentsRepository = getCustomRepository(InvestmentsRepository);
     const fetchedInvestment = await investmentsRepository.findById(id);
-    this.checkInvestmentUserMacthes(fetchedInvestment, user);
+    this.checkInvestmentUserMatches(fetchedInvestment, user);
 
     return fetchedInvestment;
   }
@@ -203,7 +214,7 @@ export class InvestmentsService {
   public static async deleteInvestment(id : string, user : string) : Promise<Investment> {
     const investmentsRepository = getCustomRepository(InvestmentsRepository);
     const investmentToBeDeleted = await investmentsRepository.findById(id);
-    this.checkInvestmentUserMacthes(investmentToBeDeleted, user);
+    this.checkInvestmentUserMatches(investmentToBeDeleted, user);
 
     await investmentsRepository.delete(id);
 
@@ -224,7 +235,7 @@ export class InvestmentsService {
     
     const investmentsRepository = getCustomRepository(InvestmentsRepository);
     const investmentToBeUpdated = await investmentsRepository.findById(id);
-    this.checkInvestmentUserMacthes(investmentToBeUpdated, investment.user);
+    this.checkInvestmentUserMatches(investmentToBeUpdated, investment.user);
 
     const updatedInvestment = merge(investmentToBeUpdated, investment);
     await investmentsRepository.save(updatedInvestment);
