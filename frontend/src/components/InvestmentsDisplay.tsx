@@ -1,10 +1,9 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Investment } from "../services/InvestmentsService";
 import { groupBy } from "lodash";
 import { InvestmentGroup } from "./InvestmentGroup";
 import { Spinner } from "./Spinner";
-import { useTranslation } from "react-i18next";
 
 const Container = styled.ul`
   overflow-y: scroll;
@@ -40,34 +39,40 @@ function groupInvestmentsByDate(investments : Array<Investment>) : Array<Investm
 export interface InvestmentsDisplayProps {
   investments : Array<Investment>;
   isLoading : boolean;
+  setIsLoading :  React.Dispatch<React.SetStateAction<boolean>>;
+  getMoreResults : () => void;
+  hasMoreResults : boolean;
 }
 
 export function InvestmentsDisplay(props : InvestmentsDisplayProps) : JSX.Element {
   const {
     investments,
-    isLoading
+    isLoading,
+    setIsLoading,
+    getMoreResults,
+    hasMoreResults
   } = props;
 
-  const { t } = useTranslation();
   const listEndMarkerRef = useRef<HTMLLIElement>(null);
   
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver((entries) => {
-  //     if(entries[0].isIntersecting && !moreResultsAreLoading) {
-  //       setMoreResultsAreLoading(true);
-  //       setTimeout(() => setMoreResultsAreLoading(false), 1000);
-  //     }
-  //   }, {
-  //     root: null,
-  //     threshold: 0.8
-  //   });
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if(entries[0].isIntersecting && 
+         !isLoading &&
+         hasMoreResults) {
+        getMoreResults();
+      }
+    }, {
+      root: null,
+      threshold: 0.8
+    });
   
-  //   observer.observe(listEndMarkerRef.current!);
+    observer.observe(listEndMarkerRef.current!);
   
-  //   return () => {
-  //     observer.disconnect();
-  //   };
-  // }, [moreResultsAreLoading]);
+    return () => {
+      observer.disconnect();
+    };
+  }, [isLoading, setIsLoading, getMoreResults, hasMoreResults]);
 
   const investmentGroups = groupInvestmentsByDate(investments);
 
