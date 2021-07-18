@@ -8,16 +8,7 @@ import cors from "cors";
 
 (async () => {
   try {
-    const connectionOptions = await getConnectionOptions();
-    await createConnection({
-      ...connectionOptions,
-      entities: ["dist/entities/**/*.js"],
-      migrations: ["dist/migrations/**/*.js"],
-      cli: {
-        migrationsDir: "src/migrations"
-      },
-      migrationsTableName: "Migrations"
-    });
+    await createConnection();
   }
   catch(error) {
     console.log(error);
