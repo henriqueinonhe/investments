@@ -35,7 +35,7 @@ export function InvestmentsDisplay() : JSX.Element {
   const isMounted = useIsMounted();
 
   useAsync(isMounted, async () => {
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
     return await InvestmentsService.getInvestments();
   }, (data) => {
     setInvestments(data.data);

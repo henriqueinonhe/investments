@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { App } from "./App";
-import "./i18n";
+import "./helpers/i18n";
 
 const body = document.querySelector("body")!;
 const rootNode = document.createElement("div")!;

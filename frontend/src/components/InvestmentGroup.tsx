@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Investment } from "../services/InvestmentsServices";
 import { DateDivider } from "./DateDivider";
 import { InvestmentEntry } from "./InvestmentEntry";
+import Dayjs from "../helpers/dayjs";
 
 export interface InvestmentGroup {
   date : string;
@@ -26,8 +27,7 @@ export const InvestmentGroup = React.memo((props : InvestmentGroupProps) => {
 
   return (
     <Container>
-      {/* TODO FORMAT DATE */}
-      <DateDivider>{investmentGroup.date}</DateDivider>
+      <DateDivider>{Dayjs.utc(investmentGroup.date).format("YYYY-MM-DD")}</DateDivider>
       <List>
         {
           investmentGroup.investments.map(investment =>

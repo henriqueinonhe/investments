@@ -1,4 +1,4 @@
-import { PaginatedData } from "../utils";
+import { PaginatedData } from "../helpers/utils";
 import { BaseAPIService } from "./BaseAPIService";
 
 export type InvestmentType = "VARIABLE" | "FIXED";
