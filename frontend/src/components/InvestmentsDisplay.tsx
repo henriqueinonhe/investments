@@ -10,6 +10,8 @@ import { UpdateInvestmentContext } from "../contexts/UpdateInvestmentContext";
 import { FormModal } from "./FormModal";
 import { InvestmentForm } from "./InvestmentForm";
 import { useTranslation } from "react-i18next";
+import { DeleteInvestmentContext } from "../contexts/DeleteInvestmentContext";
+import { DeleteInvestmentModal } from "./DeleteInvestmentModal";
 
 const Container = styled.ul`
   overflow-y: scroll;
@@ -52,8 +54,9 @@ export function InvestmentsDisplay() : JSX.Element {
   const isMounted = useIsMounted();
   const listEndMarkerRef = useRef<HTMLLIElement>(null);
 
-  //Update Investment Related State
+  //Update/Deleted Investment Related State
   const [investmentToBeUpdated, setInvestmentToBeUpdated] = useState<Investment | undefined>();
+  const [investmentToBeDeleted, setInvestmentToBeDeleted] = useState<Investment | undefined>();
 
   useAsync(isMounted, async () => {
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -108,6 +111,32 @@ export function InvestmentsDisplay() : JSX.Element {
     });
   }
 
+  function deleteInvestment() : void {
+    asyncCallback(isMounted, async () => {
+      try {
+        return await InvestmentsService.deleteInvestment(investmentToBeDeleted!.id);
+      }
+      catch(error) {
+        console.log(error.response.data);
+      }
+    }, (deletedInvestment) => {
+      if(deletedInvestment) {
+        //This could be O(1) if the id is passed 
+        //altoghether the investment to the InvestmentEntry 
+        //component
+        setInvestments(investments => {
+          const newInvestments = investments.slice();
+          const deletedInvestmentIndex = newInvestments
+            .findIndex(entry => entry.id === deletedInvestment.id);
+          newInvestments.splice(deletedInvestmentIndex, 1);
+
+          return newInvestments;
+        });
+      }
+      setInvestmentToBeDeleted(undefined);
+    });
+  }
+
   const investmentGroups = groupInvestmentsByDate(investments);
 
   return (
@@ -118,13 +147,18 @@ export function InvestmentsDisplay() : JSX.Element {
             investmentToBeUpdated,
             setInvestmentToBeUpdated
           }}>
-            {
-              investmentGroups.map(group => 
-                <InvestmentGroup 
-                  key={group.date}
-                  investmentGroup={group}
-                />)
-            }
+            <DeleteInvestmentContext.Provider value={{
+              investmentToBeDeleted,
+              setInvestmentToBeDeleted
+            }}>
+              {
+                investmentGroups.map(group => 
+                  <InvestmentGroup 
+                    key={group.date}
+                    investmentGroup={group}
+                  />)
+              }
+            </DeleteInvestmentContext.Provider>
           </UpdateInvestmentContext.Provider>
         </LoadingComponentWrapper>
 
@@ -148,6 +182,15 @@ export function InvestmentsDisplay() : JSX.Element {
             investment={investmentToBeUpdated}
           />
         </FormModal>
+      }
+
+      {
+        investmentToBeDeleted &&
+        <DeleteInvestmentModal 
+          investment={investmentToBeDeleted}
+          onNo={() => setInvestmentToBeDeleted(undefined)}
+          onYes={deleteInvestment}
+        />
       }
     </>
   ) ;
