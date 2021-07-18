@@ -76,8 +76,7 @@ export function Main() : JSX.Element {
         console.log(error);
       }
     }, (createdInvestment) => {
-      if(createdInvestment &&
-         investments.some(investment => investment.date === createdInvestment.date)) {
+      if(createdInvestment) {
         setInvestments(investments => [...investments, createdInvestment]);
       }
       setShowAddInvestmentModal(false);
