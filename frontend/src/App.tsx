@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import { Main } from "./pages/Main";
-import { lightTheme } from "./theme";
+import { lightTheme } from "./helpers/theme";
 
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
