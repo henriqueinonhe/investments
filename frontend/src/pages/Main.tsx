@@ -7,8 +7,7 @@ import { FormModal } from "../components/FormModal";
 import { Header } from "../components/Header";
 import { InvestmentForm } from "../components/InvestmentForm";
 import { InvestmentsDisplay } from "../components/InvestmentsDisplay";
-import { Modal } from "../components/Modal";
-import { CreateInvestmentData, InvestmentsService } from "../services/InvestmentsServices";
+import { CreateInvestmentData, InvestmentsService } from "../services/InvestmentsService";
 
 const Container = styled.div``;
 

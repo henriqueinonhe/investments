@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Investment } from "../services/InvestmentsServices";
+import { Investment } from "../services/InvestmentsService";
 import { DateDivider } from "./DateDivider";
 import { InvestmentEntry } from "./InvestmentEntry";
 import Dayjs from "../helpers/dayjs";

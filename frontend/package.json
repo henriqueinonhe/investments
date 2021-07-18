@@ -7,6 +7,9 @@
     "docs": "rm docs -r -f && typedoc"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.35",
+    "@fortawesome/free-solid-svg-icons": "^5.15.3",
+    "@fortawesome/react-fontawesome": "^0.1.14",
     "@henriqueinonhe/react-hooks": "^1.1.4",
     "axios": "^0.21.1",
     "dayjs": "^1.10.6",

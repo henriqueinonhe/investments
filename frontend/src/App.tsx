@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { createGlobalStyle, ThemeProvider } from "styled-components";
+import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 import { Main } from "./pages/Main";
 import { lightTheme } from "./helpers/theme";
 
@@ -64,6 +64,8 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+const ModalContainer = styled.div``;
+
 export function App() : JSX.Element {
 
   return (
@@ -73,6 +75,8 @@ export function App() : JSX.Element {
       <ThemeProvider theme={lightTheme}>
         <Main />
       </ThemeProvider>
+
+      <ModalContainer id="modalContainer"/>
     </Suspense>
   );
 }

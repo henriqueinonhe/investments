@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+/* eslint-disable function-paren-newline */
+import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { Investment, InvestmentsService } from "../services/InvestmentsServices";
+import { Investment, InvestmentsService, UpdateInvestmentData } from "../services/InvestmentsService";
 import { FormModal } from "./FormModal";
 import { InvestmentForm } from "./InvestmentForm";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { asyncCallback, useIsMounted } from "@henriqueinonhe/react-hooks";
+import { UpdateInvestmentContext } from "../contexts/UpdateInvestmentContext";
 
 const Container = styled.li`
   display: flex;
@@ -15,11 +20,11 @@ const Container = styled.li`
 const InvestmentBaseField = styled.div``;
 
 const InvestmentTypeField = styled(InvestmentBaseField)`
+  margin-left: 4px;
 `;
 
 const InvestmentIdentifierField = styled(InvestmentBaseField)`
   margin-left: 12px;
-  /* overflow-wrap: anywhere; */
   text-overflow: ellipsis;
   overflow: hidden;
 `;
@@ -27,6 +32,24 @@ const InvestmentIdentifierField = styled(InvestmentBaseField)`
 const InvestmentValueField = styled(InvestmentBaseField)`
   margin-left: 12px;
   white-space: nowrap;
+`;
+
+const IconAndInvestmentTypeContainer = styled.div`
+  display: flex;
+`;
+
+const EditIcon = styled(FontAwesomeIcon).attrs(() => ({
+  icon: faEdit
+})
+)`
+`;
+
+const TrashIcon = styled(FontAwesomeIcon).attrs(() => ({
+  icon: faTrash
+})
+)`
+  margin-left: 4px;
+  width: 16px;
 `;
 
 export interface InvestmentyEntryProps {
@@ -38,34 +61,23 @@ export const InvestmentEntry = React.memo((props : InvestmentyEntryProps) => {
     investment
   } = props;
 
-  const [showEditInvestmentModal, setShowEditInvestmentModal] = useState(false);
-
+  const { setInvestmentToBeUpdated } = useContext(UpdateInvestmentContext);
   const { t } = useTranslation();
 
   const displayableInvestmentType = InvestmentsService.displayableInvestmentType(investment.type);
 
   return (
-    <Container
-      //TEMP!
-      onClick={() => setShowEditInvestmentModal(true)}
-    >
-      <InvestmentTypeField>{t(displayableInvestmentType)}</InvestmentTypeField>
+    <Container>
+      <IconAndInvestmentTypeContainer>
+        <EditIcon onClick={() => setInvestmentToBeUpdated(investment)}/>
+        <TrashIcon />
+        <InvestmentTypeField>{t(displayableInvestmentType)}</InvestmentTypeField>
+      </IconAndInvestmentTypeContainer>
+      
       <InvestmentIdentifierField>{investment.identifier}</InvestmentIdentifierField>
+
       {/* FORMAT CURRENCY! */}
       <InvestmentValueField>{`R$ ${investment.value.toFixed(2).toString()}`}</InvestmentValueField>
-
-      {
-        showEditInvestmentModal &&
-        <FormModal
-          title={t("Edit Investment")}
-        >
-          <InvestmentForm 
-            onCancel={() => { setShowEditInvestmentModal(false);}}
-            onSave={investment => console.log(investment)}
-            investment={investment}
-          />
-        </FormModal>
-      }
     </Container>
   );
 });
