@@ -13,10 +13,6 @@ export interface EnvironmentVariables {
   TYPEORM_PORT : string;
   TYPEORM_SYNCHRONIZE : string;
   TYPEORM_LOGGING : string;
-  TYPEORM_ENTITIES : string;
-  TYPEORM_MIGRATIONS : string;
-  TYPEORM_MIGRATIONS_DIR : string;
-  TYPEORM_MIGRATIONS_TABLE_NAME : string;
   MOCKED_USER : string;
   AUTH0_JWKS_URI : string;
   AUTH0_AUDIENCE : string;
@@ -49,18 +45,6 @@ const environmentSchema = Joi.object<EnvironmentVariables>({
     .required(),
 
   TYPEORM_LOGGING: Joi.string()
-    .required(),
-
-  TYPEORM_ENTITIES: Joi.string()
-    .required(),
-
-  TYPEORM_MIGRATIONS: Joi.string()
-    .required(),
-
-  TYPEORM_MIGRATIONS_DIR: Joi.string()
-    .required(),
-
-  TYPEORM_MIGRATIONS_TABLE_NAME: Joi.string()
     .required(),
 
   MOCKED_USER: Joi.string(),

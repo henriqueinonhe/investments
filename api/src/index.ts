@@ -1,6 +1,6 @@
 import express from "express";
 import "reflect-metadata";
-import { createConnection } from "typeorm";
+import { createConnection, getConnectionOptions } from "typeorm";
 import { handleError } from "./middlewares/handleError";
 import { router } from "./routes";
 import { env } from "./env";
@@ -8,7 +8,16 @@ import cors from "cors";
 
 (async () => {
   try {
-    await createConnection();
+    const connectionOptions = await getConnectionOptions();
+    await createConnection({
+      ...connectionOptions,
+      entities: ["dist/entities/**/*.js"],
+      migrations: ["dist/migrations/**/*.js"],
+      cli: {
+        migrationsDir: "src/migrations"
+      },
+      migrationsTableName: "Migrations"
+    });
   }
   catch(error) {
     console.log(error);

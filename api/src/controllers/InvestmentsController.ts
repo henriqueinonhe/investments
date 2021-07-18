@@ -7,7 +7,6 @@ export class InvestmentsController {
       ...req.query,
       user: req.user!.sub!
     };
-    
 
     const fetchedInvestments = await InvestmentsService.getInvestments(query);
 
