@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Button } from "../components/Button";
+import { FormModal } from "../components/FormModal";
 import { Header } from "../components/Header";
 import { InvestmentForm } from "../components/InvestmentForm";
 import { InvestmentsDisplay } from "../components/InvestmentsDisplay";
@@ -22,20 +23,6 @@ const AddInvestmentButton = styled(Button)`
   padding: 10px;
   width: 100%;
   margin: 0 12px;
-`;
-
-const ModalTitle = styled.h2`
-  margin-bottom: 20px;
-  font-weight: bold;
-  font-size: 32px;
-  text-align: center;
-`;
-
-const ModalContent = styled.div`
-  padding: 20px;
-  width: 100%;
-  height: 100%;
-  background-color: white;
 `;
 
 const InvestmentsDisplayContainer = styled.div`
@@ -77,15 +64,14 @@ export function Main() : JSX.Element {
 
       {
         showAddInvestmentModal &&
-        <Modal>
-          <ModalContent>
-            <ModalTitle>{t("Add Investment")}</ModalTitle>
-            <InvestmentForm 
-              onCancel={() => setShowAddInvestmentModal(false)}
-              onSave={addInvestment}
-            />
-          </ModalContent>
-        </Modal>
+        <FormModal
+          title={t("Add Investment")}
+        >
+          <InvestmentForm 
+            onCancel={() => setShowAddInvestmentModal(false)}
+            onSave={addInvestment}
+          />
+        </FormModal>
       }
     </Container>
   );

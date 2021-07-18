@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Investment, InvestmentsService } from "../services/InvestmentsServices";
+import { FormModal } from "./FormModal";
+import { InvestmentForm } from "./InvestmentForm";
 
 const Container = styled.li`
   display: flex;
@@ -36,16 +38,34 @@ export const InvestmentEntry = React.memo((props : InvestmentyEntryProps) => {
     investment
   } = props;
 
+  const [showEditInvestmentModal, setShowEditInvestmentModal] = useState(false);
+
   const { t } = useTranslation();
 
   const displayableInvestmentType = InvestmentsService.displayableInvestmentType(investment.type);
 
   return (
-    <Container>
+    <Container
+      //TEMP!
+      onClick={() => setShowEditInvestmentModal(true)}
+    >
       <InvestmentTypeField>{t(displayableInvestmentType)}</InvestmentTypeField>
       <InvestmentIdentifierField>{investment.identifier}</InvestmentIdentifierField>
       {/* FORMAT CURRENCY! */}
       <InvestmentValueField>{`R$ ${investment.value.toFixed(2).toString()}`}</InvestmentValueField>
+
+      {
+        showEditInvestmentModal &&
+        <FormModal
+          title={t("Edit Investment")}
+        >
+          <InvestmentForm 
+            onCancel={() => { setShowEditInvestmentModal(false);}}
+            onSave={investment => console.log(investment)}
+            investment={investment}
+          />
+        </FormModal>
+      }
     </Container>
   );
 });

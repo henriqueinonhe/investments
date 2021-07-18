@@ -17,6 +17,12 @@ const ListEndMarker = styled.li`
   height: 60px;
 `;
 
+const SpinnerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
 function groupInvestmentsByDate(investments : Array<Investment>) : Array<InvestmentGroup> {
   const investmentGroups : Array<InvestmentGroup> = [];
 
@@ -84,7 +90,9 @@ export function InvestmentsDisplay() : JSX.Element {
 
       {
         moreResultsAreLoading &&
-        <Spinner /> 
+        <SpinnerContainer>
+          <Spinner /> 
+        </SpinnerContainer>
       }
       <ListEndMarker ref={listEndMarkerRef}/>
     </Container>
