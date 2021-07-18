@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { CreateInvestmentData, InvestmentType } from "../services/InvestmentsServices";
+import { CreateInvestmentData, InvestmentType } from "../services/InvestmentsService";
 import { Button } from "./Button";
 import Dayjs from "../helpers/dayjs";
-import { LoadingComponentWrapper } from "./LoadingComponentWrapper";
 import { Modal } from "./Modal";
 import { asyncCallback, useIsMounted } from "@henriqueinonhe/react-hooks";
 import { CenteredSpinner } from "./CenteredSpinner";
@@ -54,20 +53,29 @@ const SaveButton = styled(Button)`
 `;
 
 export interface InvestmentFormProps {
+  investment ?: CreateInvestmentData;
   onCancel : () => void;
   onSave : (investment : CreateInvestmentData) => void;
 }
 
 export function InvestmentForm(props : InvestmentFormProps) : JSX.Element {
   const {
+    investment,
     onCancel,
     onSave
   } = props;
 
-  const [identifier, setIdentifier] = useState("");
-  const [type, setType] = useState<InvestmentType | undefined>();
-  const [value, setValue] = useState("");
-  const [date, setDate] = useState(Dayjs().format("YYYY-MM-DD"));
+  const initialIdentifier = investment?.identifier ?? "";
+  const initialType = investment?.type;
+  const initialValue = investment?.value?.toFixed(2).toString() ?? "";
+  const initialDate = investment?.date ? 
+    Dayjs.utc(investment.date).format("YYYY-MM-DD") : 
+    Dayjs().format("YYYY-MM-DD");
+
+  const [identifier, setIdentifier] = useState(initialIdentifier);
+  const [type, setType] = useState<InvestmentType | undefined>(initialType);
+  const [value, setValue] = useState(initialValue);
+  const [date, setDate] = useState(initialDate);
   const [saveIsLoading, setSaveIsLoading] = useState(false);
   const isMounted = useIsMounted();
 

@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -20,9 +21,10 @@ export function Modal(props : ModalProps) : JSX.Element {
     children
   } = props;
 
-  return (
+  return ReactDOM.createPortal(
     <Container>
       {children}
-    </Container>
+    </Container>,
+    document.querySelector("#modalContainer")!
   );
 }

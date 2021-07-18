@@ -1,11 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { Investment, InvestmentsService } from "../services/InvestmentsServices";
+import { Investment, InvestmentsService, UpdateInvestmentData } from "../services/InvestmentsService";
 import { groupBy } from "lodash";
 import { InvestmentGroup } from "./InvestmentGroup";
-import { useIsMounted, useAsync } from "@henriqueinonhe/react-hooks";
+import { useIsMounted, useAsync, asyncCallback } from "@henriqueinonhe/react-hooks";
 import { LoadingComponentWrapper } from "./LoadingComponentWrapper";
 import { Spinner } from "./Spinner";
+import { UpdateInvestmentContext } from "../contexts/UpdateInvestmentContext";
+import { FormModal } from "./FormModal";
+import { InvestmentForm } from "./InvestmentForm";
+import { useTranslation } from "react-i18next";
 
 const Container = styled.ul`
   overflow-y: scroll;
@@ -15,6 +19,12 @@ const Container = styled.ul`
 
 const ListEndMarker = styled.li`
   height: 60px;
+`;
+
+const SpinnerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 `;
 
 function groupInvestmentsByDate(investments : Array<Investment>) : Array<InvestmentGroup> {
@@ -33,6 +43,7 @@ function groupInvestmentsByDate(investments : Array<Investment>) : Array<Investm
 }
 
 export function InvestmentsDisplay() : JSX.Element {
+  const { t } = useTranslation();
   const [investments, setInvestments] = useState<Array<Investment>>([]);
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
@@ -40,6 +51,9 @@ export function InvestmentsDisplay() : JSX.Element {
   const [moreResultsAreLoading, setMoreResultsAreLoading] = useState(false);
   const isMounted = useIsMounted();
   const listEndMarkerRef = useRef<HTMLLIElement>(null);
+
+  //Update Investment Related State
+  const [investmentToBeUpdated, setInvestmentToBeUpdated] = useState<Investment | undefined>();
 
   useAsync(isMounted, async () => {
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -68,25 +82,73 @@ export function InvestmentsDisplay() : JSX.Element {
     };
   }, [moreResultsAreLoading]);
 
+  function updateInvestment(newInvestment : UpdateInvestmentData) : void {
+    asyncCallback(isMounted, async () => {
+      try {
+        return await InvestmentsService.updateInvestment(investmentToBeUpdated!.id, newInvestment);
+      }
+      catch(error) {
+        console.log(error.response.data);
+      }
+    }, (updatedInvestment) => {
+      if(updatedInvestment) {
+        //This could be O(1) if the id is passed 
+        //altoghether the investment to the InvestmentEntry 
+        //component
+        setInvestments(investments => {
+          const newInvestments = investments.slice();
+          const updatedInvestmentIndex = newInvestments
+            .findIndex(entry => entry.id === updatedInvestment.id);
+          newInvestments[updatedInvestmentIndex] = updatedInvestment;
+
+          return newInvestments;
+        });
+      }
+      setInvestmentToBeUpdated(undefined);
+    });
+  }
+
   const investmentGroups = groupInvestmentsByDate(investments);
 
   return (
-    <Container>
-      <LoadingComponentWrapper isLoading={isLoading}>
+    <>
+      <Container>
+        <LoadingComponentWrapper isLoading={isLoading}>
+          <UpdateInvestmentContext.Provider value={{
+            investmentToBeUpdated,
+            setInvestmentToBeUpdated
+          }}>
+            {
+              investmentGroups.map(group => 
+                <InvestmentGroup 
+                  key={group.date}
+                  investmentGroup={group}
+                />)
+            }
+          </UpdateInvestmentContext.Provider>
+        </LoadingComponentWrapper>
+
         {
-          investmentGroups.map(group => 
-            <InvestmentGroup 
-              key={group.date}
-              investmentGroup={group}
-            />)
+          moreResultsAreLoading &&
+        <SpinnerContainer>
+          <Spinner /> 
+        </SpinnerContainer>
         }
-      </LoadingComponentWrapper>
+        <ListEndMarker ref={listEndMarkerRef}/>
+      </Container>
 
       {
-        moreResultsAreLoading &&
-        <Spinner /> 
+        investmentToBeUpdated &&
+        <FormModal
+          title={t("Edit Investment")}
+        >
+          <InvestmentForm 
+            onCancel={() => { setInvestmentToBeUpdated(undefined);}}
+            onSave={investment => updateInvestment(investment)}
+            investment={investmentToBeUpdated}
+          />
+        </FormModal>
       }
-      <ListEndMarker ref={listEndMarkerRef}/>
-    </Container>
+    </>
   ) ;
 }

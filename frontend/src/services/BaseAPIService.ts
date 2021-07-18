@@ -10,6 +10,12 @@ export class BaseAPIService {
         baseURL: process.env.API_BASE_URL
       });
 
+      // this.baseClient.interceptors.response.use(value => {
+      //   return value;
+      // }, error => {
+        
+      // });
+
       this.isInitialized = true;
     }
   }
