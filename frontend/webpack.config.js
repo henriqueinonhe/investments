@@ -167,7 +167,9 @@ const config = env => {
       watchOptions: {
         poll: 500
       },
-      sockPort: process.env.SOCK_PORT ?? process.env.PORT
+      //AWS Amplify doesn't understand nullish coalescence operator
+      sockPort: process.env.SOCK_PORT !== undefined ? 
+        process.env.SOCK_PORT : process.env.PORT
     },
     watchOptions: {
       ignored: /cypress/
