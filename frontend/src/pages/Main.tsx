@@ -46,13 +46,23 @@ export function Main() : JSX.Element {
   useEffect(() => {
     getInvestments();
   }, []);
+
+  function getMoreResults() : void {
+    const nextPage = page + 1;
+    const query = {
+      page: nextPage
+    };
+
+    getInvestments(query);
+    setPage(nextPage);
+  }
   
   function getInvestments(query ?: GetInvestmentsQuery) : void {
     asyncCallback(isMounted, async () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       return await InvestmentsService.getInvestments(query);
     }, (data) => {
-      setInvestments(data.data);
+      setInvestments(investments => [...investments, ...data.data]);
       setLastPage(data.meta.lastPage);
     }, setIsLoading);
   }
@@ -150,6 +160,9 @@ export function Main() : JSX.Element {
             <InvestmentsDisplay 
               investments={investments}
               isLoading={isLoading}
+              setIsLoading={setIsLoading}
+              getMoreResults={getMoreResults}
+              hasMoreResults={page !== lastPage}
             />
           </InvestmentsDisplayContainer>
 
