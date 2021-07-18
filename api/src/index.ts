@@ -1,10 +1,12 @@
 import express from "express";
 import "reflect-metadata";
-import { createConnection, getConnectionOptions } from "typeorm";
+import { createConnection } from "typeorm";
 import { handleError } from "./middlewares/handleError";
 import { router } from "./routes";
 import { env } from "./env";
 import cors from "cors";
+import https from "https";
+import fs from "fs";
 
 (async () => {
   try {
@@ -25,8 +27,22 @@ import cors from "cors";
 
   app.use(router);
   app.use(handleError);
+
   
-  app.listen(env.PORT, () => {
-    console.log(`API up at ${process.env.PORT}!`);
-  });
+  if(env.USE_HTTPS === "true") {
+    const server = https.createServer({
+      key: fs.readFileSync("./certs/server-key.pem"),
+      cert: fs.readFileSync("./certs/server-cert.pem")
+    }, app);
+    
+    server.listen(env.PORT, () => {
+      console.log(`API up at ${process.env.PORT}!`);
+    });
+  }
+  else {
+    app.listen(env.PORT, () => {
+      console.log(`API up at ${process.env.PORT}!`);
+    });
+  }
+  
 })();

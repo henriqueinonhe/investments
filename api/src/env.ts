@@ -21,7 +21,7 @@ export interface EnvironmentVariables {
   AUTH0_JWKS_URI : string;
   AUTH0_AUDIENCE : string;
   AUTH0_ISSUER : string;
-  
+  USE_HTTPS : string;
 }
 
 const environmentSchema = Joi.object<EnvironmentVariables>({
@@ -76,7 +76,9 @@ const environmentSchema = Joi.object<EnvironmentVariables>({
 
   AUTH0_ISSUER : Joi.string()
     .not().empty()
-    .required()
+    .required(),
+
+  USE_HTTPS : Joi.string()
 }).unknown();
 
 const { value, error } = environmentSchema.validate(process.env);
