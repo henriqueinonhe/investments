@@ -1,4 +1,4 @@
-import { asyncCallback, useAsync, useIsMounted } from "@henriqueinonhe/react-hooks";
+import { asyncCallback, useIsMounted } from "@henriqueinonhe/react-hooks";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
@@ -43,16 +43,13 @@ export function Main() : JSX.Element {
   const [investmentToBeUpdated, setInvestmentToBeUpdated] = useState<Investment | undefined>();
   const [investmentToBeDeleted, setInvestmentToBeDeleted] = useState<Investment | undefined>();
 
-  useAsync(isMounted, async () => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return await InvestmentsService.getInvestments();
-  }, (data) => {
-    setInvestments(data.data);
-    setLastPage(data.meta.lastPage);
-  }, [], setIsLoading);
-
+  useEffect(() => {
+    getInvestments();
+  }, []);
+  
   function getInvestments(query ?: GetInvestmentsQuery) : void {
     asyncCallback(isMounted, async () => {
+      await new Promise(resolve => setTimeout(resolve, 1000));
       return await InvestmentsService.getInvestments(query);
     }, (data) => {
       setInvestments(data.data);
