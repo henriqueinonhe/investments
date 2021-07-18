@@ -159,7 +159,7 @@ const config = env => {
       host: '0.0.0.0',
       disableHostCheck: true,
       watchOptions: {
-        poll: true 
+        poll: 500
       },
       sockPort: process.env.SOCK_PORT ?? process.env.PORT
     },
