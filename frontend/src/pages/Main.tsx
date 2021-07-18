@@ -68,8 +68,11 @@ export function Main() : JSX.Element {
       catch(error) {
         console.log(error);
       }
-    }, () => {
-      getInvestments();
+    }, (createdInvestment) => {
+      if(createdInvestment &&
+         investments.some(investment => investment.date === createdInvestment.date)) {
+        setInvestments(investments => [...investments, createdInvestment]);
+      }
       setShowAddInvestmentModal(false);
     });
   }
