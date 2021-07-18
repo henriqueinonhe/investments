@@ -4,12 +4,13 @@ import { Investment, InvestmentsService } from "../services/InvestmentsServices"
 import { groupBy } from "lodash";
 import { InvestmentGroup } from "./InvestmentGroup";
 import { useIsMounted, useAsync } from "@henriqueinonhe/react-hooks";
+import { LoadingComponentWrapper } from "./LoadingComponentWrapper";
 
 const Container = styled.ul`
   overflow-y: scroll;
   margin-top: 20px;
   padding: 0 10px;
-  max-height: 50vh;
+  height: 50vh;
 `;
 
 function groupInvestmentsByDate(investments : Array<Investment>) : Array<InvestmentGroup> {
@@ -34,7 +35,8 @@ export function InvestmentsDisplay() : JSX.Element {
   const isMounted = useIsMounted();
 
   useAsync(isMounted, async () => {
-    return await InvestmentsService.getInvestments({page: 2});
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    return await InvestmentsService.getInvestments();
   }, (data) => {
     setInvestments(data.data);
   }, [], setIsLoading);
@@ -43,13 +45,15 @@ export function InvestmentsDisplay() : JSX.Element {
 
   return (
     <Container>
-      {
-        investmentGroups.map(group => 
-          <InvestmentGroup 
-            key={group.date}
-            investmentGroup={group}
-          />)
-      }
+      <LoadingComponentWrapper isLoading={isLoading}>
+        {
+          investmentGroups.map(group => 
+            <InvestmentGroup 
+              key={group.date}
+              investmentGroup={group}
+            />)
+        }
+      </LoadingComponentWrapper>
     </Container>
   ) ;
 }
