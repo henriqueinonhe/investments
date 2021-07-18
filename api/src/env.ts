@@ -18,6 +18,9 @@ export interface EnvironmentVariables {
   TYPEORM_MIGRATIONS_DIR : string;
   TYPEORM_MIGRATIONS_TABLE_NAME : string;
   MOCKED_USER : string;
+  AUTH0_JWKS_URI : string;
+  AUTH0_AUDIENCE : string;
+  AUTH0_ISSUER : string;
 }
 
 const environmentSchema = Joi.object<EnvironmentVariables>({
@@ -60,7 +63,17 @@ const environmentSchema = Joi.object<EnvironmentVariables>({
   TYPEORM_MIGRATIONS_TABLE_NAME: Joi.string()
     .required(),
 
-  MOCKED_USER: Joi.string()
+  MOCKED_USER: Joi.string(),
+
+  AUTH0_JWKS_URI : Joi.string()
+    .not().empty()
+    .required(),
+
+  AUTH0_AUDIENCE : Joi.string()
+    .not().empty()
+    .required(),
+
+  AUTH0_ISSUER : Joi.string()
     .not().empty()
     .required()
 }).unknown();
@@ -71,4 +84,4 @@ if(error) {
   throw error;
 }
 
-export const env = value;
+export const env : EnvironmentVariables = value;

@@ -4,10 +4,13 @@ export class BaseAPIService {
   private static baseClient : AxiosInstance;
   private static isInitialized = false;
 
-  public static async initialize() : Promise<void> {
+  public static initialize(token ?: string) : void {
     if(!this.isInitialized) {
       this.baseClient = Axios.create({
-        baseURL: process.env.API_BASE_URL
+        baseURL: process.env.API_BASE_URL,
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
       });
 
       // this.baseClient.interceptors.response.use(value => {

@@ -17,7 +17,13 @@ const CircularDependencyPlugin = require("circular-dependency-plugin");
 
 //Initializing Environment Variables
 dotenv.config();
-const environmentVariables = ["API_BASE_URL"];
+const environmentVariables = [
+  "API_BASE_URL",
+  "API_BASE_URL",
+  "AUTH0_DOMAIN",
+  "AUTH0_CLIENT_ID",
+  "AUTH0_AUDIENCE"
+];
 
 const config = env => {
   const srcPath = path.resolve(__dirname, "src");
