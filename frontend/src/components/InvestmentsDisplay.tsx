@@ -9,7 +9,6 @@ import { Spinner } from "./Spinner";
 
 const Container = styled.ul`
   overflow-y: scroll;
-  margin-top: 20px;
   padding: 0 10px;
   height: 50vh;
 `;
