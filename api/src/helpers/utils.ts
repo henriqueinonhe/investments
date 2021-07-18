@@ -12,5 +12,5 @@ export type PaginatedEntity<T> = {
 };
 
 export function computeLastPage(total : number, perPage : number) : number {
-  return Math.ceil(total / perPage);
+  return Math.max(Math.ceil(total / perPage), 1);
 }
