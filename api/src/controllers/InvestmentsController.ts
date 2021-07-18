@@ -10,6 +10,8 @@ export class InvestmentsController {
       ...req.query,
       user: res.locals.authenticatedUser ?? mockedUser
     };
+
+    console.log((req as any).user);
     const fetchedInvestments = await InvestmentsService.getInvestments(query);
 
     res.status(200).send(fetchedInvestments);

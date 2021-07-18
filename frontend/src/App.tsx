@@ -82,7 +82,9 @@ export function App() : JSX.Element {
   useEffect(() => {
     if(isAuthenticated) {
       asyncCallback(isMounted, async () => {
-        return await getAccessTokenSilently();
+        return await getAccessTokenSilently({
+          audience: process.env.AUTH0_AUDIENCE!
+        });
       }, (token) => {
         BaseAPIService.initialize(token);
       });
