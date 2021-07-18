@@ -63,9 +63,7 @@ const environmentSchema = Joi.object<EnvironmentVariables>({
   TYPEORM_MIGRATIONS_TABLE_NAME: Joi.string()
     .required(),
 
-  MOCKED_USER: Joi.string()
-    .not().empty()
-    .required(),
+  MOCKED_USER: Joi.string(),
 
   AUTH0_JWKS_URI : Joi.string()
     .not().empty()

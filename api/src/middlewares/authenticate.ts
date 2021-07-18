@@ -1,8 +1,9 @@
 import jwt from "express-jwt";
 import jwks from "jwks-rsa";
 import { env } from "../env";
+import { Request, Response, NextFunction } from "express";
 
-export const authenticate = jwt(({
+const auth0AuthenticationMiddleware = jwt(({
   secret: jwks.expressJwtSecret({
     cache: true,
     rateLimit: true,
@@ -13,3 +14,11 @@ export const authenticate = jwt(({
   issuer: env.AUTH0_ISSUER,
   algorithms: ["RS256"]
 }));
+
+export const authenticate = env.MOCKED_USER ? (req : Request, res : Response, next : NextFunction) : void => {
+  req.user = {
+    sub: env.MOCKED_USER
+  };
+
+  next();
+} : auth0AuthenticationMiddleware;
