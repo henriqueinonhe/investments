@@ -225,23 +225,25 @@ export class InvestmentsService {
     return investmentToBeDeleted;
   }
 
-  public static async updateInvestment(id : string, investment : Omit<Investment, "id">) : Promise<Investment> {
-    const validationErrorEntries = this.validateUpdateInvestmentData({
+  public static async updateInvestment(id : string, user : string, investment : UpdateInvestmentData) : Promise<Investment> {
+    const newInvestment = {
       ...investment,
-      date: investment.date.toISOString()
-    });
+      user
+    };
+
+    const validationErrorEntries = this.validateUpdateInvestmentData(newInvestment);
 
     if(validationErrorEntries.length !== 0) {
       throw new ValidationError("Failed to create Investment due to invalid data!", 
-                                "InvalidCreateInvestmentData",
+                                "InvalidUpdateInvestmentData",
                                 validationErrorEntries);
     }
     
     const investmentsRepository = getCustomRepository(InvestmentsRepository);
     const investmentToBeUpdated = await investmentsRepository.findById(id);
-    this.checkInvestmentUserMatches(investmentToBeUpdated, investment.user);
+    this.checkInvestmentUserMatches(investmentToBeUpdated, user);
 
-    const updatedInvestment = merge(investmentToBeUpdated, investment);
+    const updatedInvestment = merge(investmentToBeUpdated, newInvestment);
     await investmentsRepository.save(updatedInvestment);
 
     return updatedInvestment;

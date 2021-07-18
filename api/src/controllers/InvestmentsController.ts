@@ -47,11 +47,9 @@ export class InvestmentsController {
 
   public static updateInvestment = wrapAsyncController(async (req, res, next) => {
     const id = req.params.investmentId!;
-    const newInvestment = {
-      ...req.body,
-      user: res.locals.authenticatedUser ?? mockedUser
-    };
-    const updatedInvestment = await InvestmentsService.updateInvestment(id, newInvestment);
+    const user = res.locals.authenticatedUser ?? mockedUser; 
+    const newInvestment = req.body;
+    const updatedInvestment = await InvestmentsService.updateInvestment(id, user, newInvestment);
 
     res.status(200).send(updatedInvestment);
     next();
