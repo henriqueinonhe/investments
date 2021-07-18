@@ -1,14 +1,12 @@
 /* eslint-disable function-paren-newline */
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { Investment, InvestmentsService, UpdateInvestmentData } from "../services/InvestmentsService";
-import { FormModal } from "./FormModal";
-import { InvestmentForm } from "./InvestmentForm";
+import { Investment, InvestmentsService } from "../services/InvestmentsService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { asyncCallback, useIsMounted } from "@henriqueinonhe/react-hooks";
 import { UpdateInvestmentContext } from "../contexts/UpdateInvestmentContext";
+import { DeleteInvestmentContext } from "../contexts/DeleteInvestmentContext";
 
 const Container = styled.li`
   display: flex;
@@ -61,8 +59,9 @@ export const InvestmentEntry = React.memo((props : InvestmentyEntryProps) => {
     investment
   } = props;
 
-  const { setInvestmentToBeUpdated } = useContext(UpdateInvestmentContext);
   const { t } = useTranslation();
+  const { setInvestmentToBeUpdated } = useContext(UpdateInvestmentContext);
+  const { setInvestmentToBeDeleted } = useContext(DeleteInvestmentContext);
 
   const displayableInvestmentType = InvestmentsService.displayableInvestmentType(investment.type);
 
@@ -70,7 +69,7 @@ export const InvestmentEntry = React.memo((props : InvestmentyEntryProps) => {
     <Container>
       <IconAndInvestmentTypeContainer>
         <EditIcon onClick={() => setInvestmentToBeUpdated(investment)}/>
-        <TrashIcon />
+        <TrashIcon onClick={() => setInvestmentToBeDeleted(investment)}/>
         <InvestmentTypeField>{t(displayableInvestmentType)}</InvestmentTypeField>
       </IconAndInvestmentTypeContainer>
       
