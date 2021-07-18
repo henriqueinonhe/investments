@@ -11,10 +11,10 @@ body.appendChild(rootNode);
 
 ReactDOM.render(
   <Auth0Provider
-    domain="dev-8z6e9jdt.us.auth0.com" //Extract to environment variable
-    clientId="YEaR72do24paH1U54sRCDRIta8XYai02" //Extract to environment variable
+    domain={process.env.AUTH0_DOMAIN!}
+    clientId={process.env.AUTH0_CLIENT_ID!}
     redirectUri={window.location.origin}
-    audience="Investments API"
+    audience={process.env.AUTH0_AUDIENCE!}
   >
     <App />
   </Auth0Provider>, 

@@ -6,6 +6,7 @@ import { Login } from "./pages/Login";
 import { useAuth0 } from "@auth0/auth0-react";
 import { asyncCallback, useAsync, useIsMounted } from "@henriqueinonhe/react-hooks";
 import { BaseAPIService } from "./services/BaseAPIService";
+import { LoadingComponentWrapper } from "./components/LoadingComponentWrapper";
 
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
@@ -75,7 +76,7 @@ const GlobalStyle = createGlobalStyle`
 const ModalContainer = styled.div``;
 
 export function App() : JSX.Element {
-  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { isAuthenticated, getAccessTokenSilently, isLoading } = useAuth0();
   const isMounted = useIsMounted();
 
   useEffect(() => {
@@ -93,11 +94,13 @@ export function App() : JSX.Element {
     <Suspense fallback={<></>}>
       <GlobalStyle />
       <ThemeProvider theme={lightTheme}>
-        {
-          isAuthenticated ?
-            <Main /> :
-            <Login />
-        }
+        <LoadingComponentWrapper isLoading={isLoading}>
+          {
+            isAuthenticated ?
+              <Main /> :
+              <Login />
+          }
+        </LoadingComponentWrapper>
         <ModalContainer id="modalContainer"/>
       </ThemeProvider>
     </Suspense>
