@@ -4,6 +4,7 @@ import { Investment } from "../services/InvestmentsService";
 import { groupBy } from "lodash";
 import { InvestmentGroup } from "./InvestmentGroup";
 import { Spinner } from "./Spinner";
+import { useTranslation } from "react-i18next";
 
 const Container = styled.ul`
   overflow-y: scroll;
@@ -19,6 +20,10 @@ const SpinnerContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 20px;
+`;
+
+const NoResults = styled.li`
+  text-align: center;
 `;
 
 function groupInvestmentsByDate(investments : Array<Investment>) : Array<InvestmentGroup> {
@@ -54,6 +59,7 @@ export function InvestmentsDisplay(props : InvestmentsDisplayProps) : JSX.Elemen
   } = props;
 
   const listEndMarkerRef = useRef<HTMLLIElement>(null);
+  const { t } = useTranslation();
   
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -84,6 +90,14 @@ export function InvestmentsDisplay(props : InvestmentsDisplayProps) : JSX.Elemen
             key={group.date}
             investmentGroup={group}
           />)
+      }
+
+      {
+        investments.length === 0 && 
+        !isLoading &&
+        <NoResults>
+          {t("There are no investments")}
+        </NoResults>
       }
 
       {
