@@ -23,6 +23,12 @@ const InputLabel = styled.label`
   margin-bottom: 4px;
 `;
 
+const InputErrorDisplay = styled.div`
+  color: #ff7c70;
+  font-size: 14px;
+  margin-top: 8px;
+`;
+
 const TextInput = styled.input`
   height: 30px;
   font-size: 16px;
@@ -56,6 +62,49 @@ const SaveButton = styled(Button)`
   margin-left: 20px;
 `;
 
+export type InvestmentValidationErrorCode = "EmptyIdentifier" | 
+                                            "NonPositiveValue" |
+                                            "ValueIsNotANumber";
+
+function validateCreateInvestmentData(investment : CreateInvestmentData) : Array<InvestmentValidationErrorCode> {
+  const errors : Array<InvestmentValidationErrorCode> = [];
+
+  if(investment.identifier === "") {
+    errors.push("EmptyIdentifier");
+  } 
+
+  if(investment.value <= 0) {
+    errors.push("NonPositiveValue");
+  }
+
+  if(isNaN(investment.value)) {
+    errors.push("ValueIsNotANumber");
+  }
+
+  return errors;
+}
+
+type ValidationErrorMessageMap = {
+  [key in InvestmentValidationErrorCode] : string;
+};
+
+const validationErrorMessageMap : ValidationErrorMessageMap = {
+  EmptyIdentifier: "Identifier cannot be empty!",
+  NonPositiveValue: "Amount must be a positive number!",
+  ValueIsNotANumber: "Amount must be a number!"
+};
+
+function computeErrorMessage(validationErrors : Array<InvestmentValidationErrorCode>, 
+                             codes : Array<InvestmentValidationErrorCode>) : string | null {
+  for(const code of codes) {
+    if(validationErrors.includes(code)) {
+      return validationErrorMessageMap[code];
+    }
+  }
+
+  return null;
+}
+
 export interface InvestmentFormProps {
   investment ?: CreateInvestmentData;
   onCancel : () => void;
@@ -80,19 +129,26 @@ export function InvestmentForm(props : InvestmentFormProps) : JSX.Element {
   const [type, setType] = useState<InvestmentType | undefined>(initialType);
   const [value, setValue] = useState(initialValue);
   const [date, setDate] = useState(initialDate);
+  const [validationErrors, setValidationErrors] = useState<Array<InvestmentValidationErrorCode>>([]);
   const [saveIsLoading, setSaveIsLoading] = useState(false);
   const isMounted = useIsMounted();
 
   const { t } = useTranslation();
 
   function handleSaveButtonClicked() : void {
-    //TODO Validate
     const investment : CreateInvestmentData = {
-      identifier,
+      identifier: identifier.trim(),
       type: type as InvestmentType,
       value: parseFloat(value),
       date
     };
+
+    const validationErrors = validateCreateInvestmentData(investment);
+    setValidationErrors(validationErrors);
+
+    if(validationErrors.length !== 0) {
+      return;
+    }
 
     asyncCallback(isMounted, async () => {
       await onSave(investment);
@@ -109,6 +165,9 @@ export function InvestmentForm(props : InvestmentFormProps) : JSX.Element {
           value={identifier}
           onChange={event => setIdentifier(event.target.value)}
         />
+        <InputErrorDisplay>
+          {computeErrorMessage(validationErrors, ["EmptyIdentifier"])}
+        </InputErrorDisplay>
       </InputContainer>
 
       <InputContainer>
@@ -117,18 +176,20 @@ export function InvestmentForm(props : InvestmentFormProps) : JSX.Element {
           value={type}
           onChange={event => setType(event.target.value as InvestmentType | undefined)}
         >
-          <option value={undefined}>{`-- ${t("Select")} --`}</option>
-          <option value="FIXED">{t("Fixed")}</option>
-          <option value="VARIABLE">{t("Variable")}</option>
+          <option value="FIXED">{t("Fixed Income")}</option>
+          <option value="VARIABLE">{t("Variable Income")}</option>
         </DropdownInput>
       </InputContainer>
 
       <InputContainer>
-        <InputLabel>{t("Amount")}</InputLabel>
+        <InputLabel>{t("Amount")} (R$)</InputLabel>
         <TextInput 
           value={value}
           onChange={event => setValue(event.target.value)}
         />
+        <InputErrorDisplay>
+          {computeErrorMessage(validationErrors, ["NonPositiveValue", "ValueIsNotANumber"])}
+        </InputErrorDisplay>
       </InputContainer>      
 
       <InputContainer>
