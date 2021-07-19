@@ -28,6 +28,11 @@ export interface GetInvestmentsQuery {
 
 export type UpdateInvestmentData = CreateInvestmentData;
 
+export type InvestmentSummary = Array<{
+  type : InvestmentType;
+  sum : number;
+}>;
+
 export class InvestmentsService {
   public static async createInvestment(investment : CreateInvestmentData) : Promise<Investment> {
     const validationErrorEntries = await this.validateCreateInvestmentData(investment);
@@ -247,5 +252,17 @@ export class InvestmentsService {
     await investmentsRepository.save(updatedInvestment);
 
     return updatedInvestment;
+  }
+
+  public static async getInvestmentsSummary(user : string) : Promise<InvestmentSummary> {
+    const investmentsRepository = getCustomRepository(InvestmentsRepository);
+    const summary = await investmentsRepository
+      .createQueryBuilder("investment")
+      .select("investment.type, SUM(investment.value)", "sum")
+      .where("investment.user = :user", { user })
+      .groupBy("investment.type")
+      .getRawMany();
+    
+    return summary;
   }
 }

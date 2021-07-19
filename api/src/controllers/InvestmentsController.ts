@@ -52,4 +52,12 @@ export class InvestmentsController {
     res.status(200).send(updatedInvestment);
     next();
   });
+
+  public static getInvestmentsSummary = wrapAsyncController(async (req, res, next) => {
+    const user = req.user!.sub!;
+    const investmentsSummary = await InvestmentsService.getInvestmentsSummary(user);
+
+    res.status(200).send(investmentsSummary);
+    next();
+  });
 }
