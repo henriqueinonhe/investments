@@ -24,19 +24,23 @@ const InputLabel = styled.label`
 `;
 
 const TextInput = styled.input`
-
+  height: 30px;
+  font-size: 16px;
 `;
 
 const DropdownInput = styled.select`
-
+  height: 30px;
+  font-size: 16px;
 `;
 
-//TODO Use material date picker
 const DateInput = styled.input.attrs(() => ({
   type: "date"
 })
 // eslint-disable-next-line function-paren-newline
-)``;
+)`
+  height: 30px;
+  font-size: 16px;
+`;
 
 const ButtonRow = styled.div`
   margin-top: 20px;
