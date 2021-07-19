@@ -17,17 +17,23 @@ import { CreateInvestmentData, GetInvestmentsQuery, Investment, InvestmentsServi
 
 const AddInvestmentButtonRow = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   margin-top: 20px;
 `;
 
 const AddInvestmentButton = styled(Button)`
   padding: 10px;
   width: 100%;
-  margin: 0 12px;
+
+  @media(min-width: 426px) {
+    width: 200px;
+  }
 `;
 
 const InvestmentsDisplayContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-top: 20px;
 `;
 
@@ -51,7 +57,14 @@ const Title = styled.h2`
 `;
 
 const InvestmentsSummaryChartContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: auto;
   margin-top: 20px;
+  max-width: 480px;
+`;
+
+const InvestmentsDisplayOuterContainer = styled.div`
 `;
 
 export function InvestmentsWallet() : JSX.Element {
@@ -187,34 +200,36 @@ export function InvestmentsWallet() : JSX.Element {
 
       <Title>{t("Investments Wallet")}</Title>
 
-      <AddInvestmentButtonRow>
-        <AddInvestmentButton
-          onClick={() => setShowAddInvestmentModal(true)}
-        >
-          {t("Add Investment")}
-        </AddInvestmentButton>
-      </AddInvestmentButtonRow>
-        
-      <UpdateInvestmentContext.Provider value={{
-        investmentToBeUpdated,
-        setInvestmentToBeUpdated
-      }}>
-        <DeleteInvestmentContext.Provider value={{
-          investmentToBeDeleted,
-          setInvestmentToBeDeleted
+      <InvestmentsDisplayOuterContainer>
+        <AddInvestmentButtonRow>
+          <AddInvestmentButton
+            onClick={() => setShowAddInvestmentModal(true)}
+          >
+            {t("Add Investment")}
+          </AddInvestmentButton>
+        </AddInvestmentButtonRow>
+          
+        <UpdateInvestmentContext.Provider value={{
+          investmentToBeUpdated,
+          setInvestmentToBeUpdated
         }}>
-          <InvestmentsDisplayContainer>
-            <InvestmentsDisplay 
-              investments={investments}
-              isLoading={investmentsAreLoading}
-              setIsLoading={setInvestmentsAreLoading}
-              getMoreResults={getMoreResults}
-              hasMoreResults={page !== lastPage}
-            />
-          </InvestmentsDisplayContainer>
+          <DeleteInvestmentContext.Provider value={{
+            investmentToBeDeleted,
+            setInvestmentToBeDeleted
+          }}>
+            <InvestmentsDisplayContainer>
+              <InvestmentsDisplay 
+                investments={investments}
+                isLoading={investmentsAreLoading}
+                setIsLoading={setInvestmentsAreLoading}
+                getMoreResults={getMoreResults}
+                hasMoreResults={page !== lastPage}
+              />
+            </InvestmentsDisplayContainer>
 
-        </DeleteInvestmentContext.Provider>
-      </UpdateInvestmentContext.Provider>
+          </DeleteInvestmentContext.Provider>
+        </UpdateInvestmentContext.Provider>
+      </InvestmentsDisplayOuterContainer>
 
       <InvestmentsSummaryChartContainer>
         <LoadingComponentWrapper isLoading={investmentsSummaryIsLoading}>

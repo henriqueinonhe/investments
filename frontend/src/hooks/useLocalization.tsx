@@ -11,7 +11,9 @@ export function useLocalization() : LocalizationFunctions {
 
   const locale = i18n.language;
 
-  const formatNumber = new Intl.NumberFormat(locale).format;
+  const formatNumber = new Intl.NumberFormat(locale, {
+    maximumFractionDigits: 2
+  }).format;
   const formatCurrency = new Intl.NumberFormat(locale, {
     style: "currency",
     currency: "BRL",

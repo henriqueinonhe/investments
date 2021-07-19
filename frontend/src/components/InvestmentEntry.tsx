@@ -16,7 +16,17 @@ const Container = styled.li`
   margin-top: 12px;
 `;
 
-const InvestmentBaseField = styled.div``;
+const InvestmentBaseField = styled.div`
+  font-size: 12px;
+
+  @media (min-width: 368px) and (max-width: 425px) {
+    font-size: 14px;
+  }
+
+  @media (min-width: 426px) {
+    font-size: 16px;
+  }
+`;
 
 const InvestmentTypeField = styled(InvestmentBaseField)`
   margin-left: 4px;
@@ -35,22 +45,34 @@ const InvestmentValueField = styled(InvestmentBaseField)`
 
 const IconAndInvestmentTypeContainer = styled.div`
   display: flex;
+  align-items: center;
 `;
 
-const EditIcon = styled(FontAwesomeIcon).attrs(() => ({
+const BaseIcon = styled(FontAwesomeIcon)`
+  cursor: pointer;
+  font-size: 12px;
+
+  @media (min-width: 368px) and (max-width: 425px) {
+    font-size: 14px;
+  }
+
+  @media (min-width: 426px) {
+    font-size: 16px;
+  }
+`;
+
+const EditIcon = styled(BaseIcon).attrs(() => ({
   icon: faEdit
 })
 )`
-  cursor: pointer;
 `;
 
-const TrashIcon = styled(FontAwesomeIcon).attrs(() => ({
+const TrashIcon = styled(BaseIcon).attrs(() => ({
   icon: faTrash
 })
 )`
   margin-left: 4px;
   width: 16px;
-  cursor: pointer;
 `;
 
 export interface InvestmentyEntryProps {

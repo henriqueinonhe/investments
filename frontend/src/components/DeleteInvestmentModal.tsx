@@ -5,11 +5,20 @@ import { Investment, InvestmentsService } from "../services/InvestmentsService";
 import { Button } from "./Button";
 import { Modal } from "./Modal";
 
-const Content = styled.div`
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
+`;
+
+const Content = styled.div`
+  width: 100%;
+  /* height: 100%; */
   background-color: white;
   padding: 20px;
+  max-width: 600px;
 `;
 
 const Title = styled.h2`
@@ -67,31 +76,33 @@ export function DeleteInvestmentModal(props : DeleteInvestmentModalProps) : JSX.
 
   return (
     <Modal>
-      <Content>
-        <Title>{t("Delete this investment?")}</Title>
+      <Container>
+        <Content>
+          <Title>{t("Delete this investment?")}</Title>
 
-        <InvestmentDataContainer>
-          <InvestmentDataField>{t("Date")}: {date}</InvestmentDataField>
-          <InvestmentDataField>{t("Type")}: {t(InvestmentsService.displayableInvestmentType(type))}</InvestmentDataField>
-          <InvestmentDataField>{t("Identifier")}: {identifier}</InvestmentDataField>
-          <InvestmentDataField>{t("Amount")}: R$ {value}</InvestmentDataField>
-        </InvestmentDataContainer>
+          <InvestmentDataContainer>
+            <InvestmentDataField>{t("Date")}: {date}</InvestmentDataField>
+            <InvestmentDataField>{t("Type")}: {t(InvestmentsService.displayableInvestmentType(type))}</InvestmentDataField>
+            <InvestmentDataField>{t("Identifier")}: {identifier}</InvestmentDataField>
+            <InvestmentDataField>{t("Amount")}: R$ {value}</InvestmentDataField>
+          </InvestmentDataContainer>
 
-        <ButtonRow>
-          <NoButton
-            variant="secondary"
-            onClick={onNo}
-          >
-            {t("No")}
-          </NoButton>
+          <ButtonRow>
+            <NoButton
+              variant="secondary"
+              onClick={onNo}
+            >
+              {t("No")}
+            </NoButton>
 
-          <YesButton
-            onClick={onYes}
-          >
-            {t("Yes")}
-          </YesButton>
-        </ButtonRow>
-      </Content>
+            <YesButton
+              onClick={onYes}
+            >
+              {t("Yes")}
+            </YesButton>
+          </ButtonRow>
+        </Content>
+      </Container>
     </Modal>
   );
 }

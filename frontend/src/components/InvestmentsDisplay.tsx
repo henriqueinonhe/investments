@@ -5,7 +5,6 @@ import { groupBy } from "lodash";
 import { InvestmentGroup } from "./InvestmentGroup";
 import { Spinner } from "./Spinner";
 import { useTranslation } from "react-i18next";
-import { sortBy } from "lodash";
 import Dayjs from "../helpers/dayjs";
 
 const Container = styled.ul`
@@ -13,6 +12,7 @@ const Container = styled.ul`
   padding: 0 10px;
   height: 50vh;
   border: 2px dashed ${props => props.theme.primaryColor};
+  width: 100%;
 `;
 
 const ListEndMarker = styled.li`

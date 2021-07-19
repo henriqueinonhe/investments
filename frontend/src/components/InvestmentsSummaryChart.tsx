@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { ChartConfiguration } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { lighten } from "polished";
+import { useLocalization } from "../hooks/useLocalization";
 
 
 export interface InvestmentSummaryChartProps {
@@ -18,6 +19,7 @@ export const InvestmentsSummaryChart = React.memo((props : InvestmentSummaryChar
   } = props;
 
   const { t } = useTranslation();
+  const { formatCurrency, formatNumber } = useLocalization();
 
   const colors = summary?.map(() => randomColor({
     luminosity: "light"
@@ -30,7 +32,7 @@ export const InvestmentsSummaryChart = React.memo((props : InvestmentSummaryChar
 
   const total = values.reduce((accum, current) => accum + current, 0);
   const formatter = (value : number) : string => {
-    return `${value} (${(100 * value / total).toFixed(2)}%)`;
+    return `${formatCurrency(value)} \n(${formatNumber(100 * value / total)}%)`;
   };
 
   const config : ChartConfiguration = {
@@ -49,7 +51,17 @@ export const InvestmentsSummaryChart = React.memo((props : InvestmentSummaryChar
       plugins: {
         datalabels: {
           formatter: formatter,
-          color: "#111"
+          color: "#111",
+          clamp: true,
+          clip: false
+        }
+      },
+      layout: {
+        padding: {
+          top: 20,
+          right: 20,
+          bottom: 20,
+          left: 20
         }
       }
     }

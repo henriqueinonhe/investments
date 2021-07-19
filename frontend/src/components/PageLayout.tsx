@@ -7,6 +7,11 @@ const Container = styled.div`
   padding-bottom: 60px;
 `;
 
+const Content = styled.div`
+  max-width: 768px;
+  margin: auto;
+`;
+
 export interface PageLayoutProps {
   children : React.ReactNode;
 }
@@ -18,9 +23,10 @@ export function PageLayout(props : PageLayoutProps) : JSX.Element {
 
   return (
     <Container>
-      <Profile />
-
-      {children}
+      <Content>
+        <Profile />
+        {children}
+      </Content>
     </Container>
   );
 }

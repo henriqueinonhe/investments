@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 
@@ -20,6 +20,17 @@ export function Modal(props : ModalProps) : JSX.Element {
   const {
     children
   } = props;
+
+  useEffect(() => {
+    const body = document.querySelector("body")!;
+    body.style.position = "fixed";
+    body.style.overflowY = "scroll";
+    body.style.width = "100%";
+
+    return () => {
+      body.style.position = "relative";
+    };
+  }, []);
 
   return ReactDOM.createPortal(
     <Container>

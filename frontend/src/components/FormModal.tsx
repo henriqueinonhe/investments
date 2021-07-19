@@ -9,11 +9,22 @@ const ModalTitle = styled.h2`
   text-align: center;
 `;
 
+const ModalContentWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+`;
+
 const ModalContent = styled.div`
   padding: 20px;
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
+  max-width: 600px;
+  /* max-height: 400px; */
   background-color: white;
+  border-radius: 4px;
 `;
 
 export interface FormModalProps {
@@ -30,10 +41,12 @@ export function FormModal(props : FormModalProps) : JSX.Element {
 
   return (
     <Modal>
-      <ModalContent>
-        <ModalTitle>{title}</ModalTitle>
-        {children}
-      </ModalContent>
+      <ModalContentWrapper>
+        <ModalContent>
+          <ModalTitle>{title}</ModalTitle>
+          {children}
+        </ModalContent>
+      </ModalContentWrapper>
     </Modal>
   );
 }

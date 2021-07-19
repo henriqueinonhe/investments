@@ -14,6 +14,15 @@ const Line = styled.div`
 const DateField = styled.div`
   margin: 0 12px;
   font-weight: bold;
+  font-size: 14px;
+
+  @media (min-width: 368px) and (max-width: 425px) {
+    font-size: 16px;
+  }
+
+  @media (min-width: 426px) {
+    font-size: 18px;
+  }
 `;
 
 export interface DateDividerProps {

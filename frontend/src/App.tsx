@@ -4,9 +4,10 @@ import { InvestmentsWallet } from "./pages/InvestmentsWallet";
 import { lightTheme } from "./helpers/theme";
 import { Login } from "./pages/Login";
 import { useAuth0 } from "@auth0/auth0-react";
-import { asyncCallback, useAsync, useIsMounted } from "@henriqueinonhe/react-hooks";
+import { asyncCallback, useIsMounted } from "@henriqueinonhe/react-hooks";
 import { BaseAPIService } from "./services/BaseAPIService";
 import { LoadingComponentWrapper } from "./components/LoadingComponentWrapper";
+import "../assets/fontCss.css";
 
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
