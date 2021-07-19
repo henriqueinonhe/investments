@@ -4,6 +4,8 @@
     "title": "Investments API",
     "version": "1.0"
   },
+  "security": [
+  ],
   "servers": [
     {
       "url": "http://localhost:3001"
@@ -195,6 +197,19 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "OAuth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://dev-8z6e9jdt.us.auth0.com/authorize?audience=Investments%20API",
+            "scopes": {
+              "test": "test"
+            }
+          }
+        }
+      }
+    },
     "schemas": {
       "Investment": {
         "title": "Investment",

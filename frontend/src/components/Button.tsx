@@ -12,11 +12,18 @@ const Container = styled.button<ContainerProps>`
   border: 1px solid ${props => props.theme.primaryColor};
   color: ${props => props.variant === "primary" ? "white" : props.theme.primaryColor};
   background-color: ${props => props.variant === "primary" ? props.theme.primaryColor : "white"};
+  cursor: pointer;
 
   &:active {
     background-color: ${props => props.variant === "primary" ? 
     darken(0.1, props.theme.primaryColor) : 
     opacify(0.2, transparentize(1, props.theme.primaryColor))}
+  }
+
+  &:hover {
+    background-color: ${props => props.variant === "primary" ? 
+    darken(0.05, props.theme.primaryColor) : 
+    opacify(0.1, transparentize(1, props.theme.primaryColor))}
   }
 `;
 

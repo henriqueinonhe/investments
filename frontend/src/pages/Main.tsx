@@ -20,7 +20,6 @@ const AddInvestmentButtonRow = styled.div`
   margin-top: 20px;
 `;
 
-
 const AddInvestmentButton = styled(Button)`
   padding: 10px;
   width: 100%;
@@ -59,7 +58,6 @@ export function Main() : JSX.Element {
   
   function getInvestments(query ?: GetInvestmentsQuery) : void {
     asyncCallback(isMounted, async () => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
       return await InvestmentsService.getInvestments(query);
     }, (data) => {
       setInvestments(investments => [...investments, ...data.data]);
