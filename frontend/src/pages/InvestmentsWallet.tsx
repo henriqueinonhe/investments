@@ -50,6 +50,10 @@ const Title = styled.h2`
   margin-top: 20px;
 `;
 
+const InvestmentsSummaryChartContainer = styled.div`
+  margin-top: 20px;
+`;
+
 export function InvestmentsWallet() : JSX.Element {
   const { t, i18n } = useTranslation();
   const [investments, setInvestments] = useState<Array<Investment>>([]);
@@ -212,11 +216,13 @@ export function InvestmentsWallet() : JSX.Element {
         </DeleteInvestmentContext.Provider>
       </UpdateInvestmentContext.Provider>
 
-      <LoadingComponentWrapper isLoading={investmentsSummaryIsLoading}>
-        <InvestmentsSummaryChart 
-          summary={investmentsSummary}
-        />
-      </LoadingComponentWrapper>
+      <InvestmentsSummaryChartContainer>
+        <LoadingComponentWrapper isLoading={investmentsSummaryIsLoading}>
+          <InvestmentsSummaryChart 
+            summary={investmentsSummary}
+          />
+        </LoadingComponentWrapper>
+      </InvestmentsSummaryChartContainer>
 
       {
         showAddInvestmentModal &&

@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { UpdateInvestmentContext } from "../contexts/UpdateInvestmentContext";
 import { DeleteInvestmentContext } from "../contexts/DeleteInvestmentContext";
+import { useLocalization } from "../hooks/useLocalization";
 
 const Container = styled.li`
   display: flex;
@@ -64,8 +65,10 @@ export const InvestmentEntry = React.memo((props : InvestmentyEntryProps) => {
   const { t } = useTranslation();
   const { setInvestmentToBeUpdated } = useContext(UpdateInvestmentContext);
   const { setInvestmentToBeDeleted } = useContext(DeleteInvestmentContext);
-
+  const { formatCurrency } = useLocalization();
+  
   const displayableInvestmentType = InvestmentsService.displayableInvestmentType(investment.type);
+  const formattedValue = formatCurrency(investment.value);
 
   return (
     <Container>
@@ -77,8 +80,7 @@ export const InvestmentEntry = React.memo((props : InvestmentyEntryProps) => {
       
       <InvestmentIdentifierField>{investment.identifier}</InvestmentIdentifierField>
 
-      {/* FORMAT CURRENCY! */}
-      <InvestmentValueField>{`R$ ${investment.value.toFixed(2).toString()}`}</InvestmentValueField>
+      <InvestmentValueField>{formattedValue}</InvestmentValueField>
     </Container>
   );
 });

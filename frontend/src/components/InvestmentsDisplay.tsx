@@ -10,6 +10,7 @@ const Container = styled.ul`
   overflow-y: scroll;
   padding: 0 10px;
   height: 50vh;
+  border: 2px dashed ${props => props.theme.primaryColor};
 `;
 
 const ListEndMarker = styled.li`
