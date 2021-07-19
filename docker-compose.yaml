@@ -22,8 +22,6 @@ services:
     env_file: ./db/.env
     ports:
       - 3306:3306
-    volumes:
-      - ./db:/docker-entrypoint-initdb.d
 
   frontend:
     container_name: InvestmentsFrontend
