@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from "react";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
-import { Main } from "./pages/Main";
+import { InvestmentsWallet } from "./pages/InvestmentsWallet";
 import { lightTheme } from "./helpers/theme";
 import { Login } from "./pages/Login";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -99,7 +99,7 @@ export function App() : JSX.Element {
         <LoadingComponentWrapper isLoading={isLoading}>
           {
             isAuthenticated ?
-              <Main /> :
+              <InvestmentsWallet /> :
               <Login />
           }
         </LoadingComponentWrapper>

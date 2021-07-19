@@ -3,8 +3,6 @@ import { initReactI18next } from "react-i18next";
 import enTranslations from "../locale/en.locale.json";
 import ptTranslations from "../locale/pt.locale.json";
 
-console.log(enTranslations, ptTranslations);
-
 i18n
   .use(initReactI18next)
   .init({
