@@ -32,8 +32,12 @@ const InvestmentsDisplayContainer = styled.div`
   margin-top: 20px;
 `;
 
+const LanguageSelect = styled.select`
+
+`;
+
 export function Main() : JSX.Element {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [investments, setInvestments] = useState<Array<Investment>>([]);
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
@@ -152,6 +156,14 @@ export function Main() : JSX.Element {
   return (
     <Container>
       <Header />
+
+      <LanguageSelect
+        value={i18n.language}
+        onChange={event => i18n.changeLanguage(event.target.value)}
+      >
+        <option value="pt">PT</option>
+        <option value="en">EN</option>
+      </LanguageSelect>
 
       <AddInvestmentButtonRow>
         <AddInvestmentButton
