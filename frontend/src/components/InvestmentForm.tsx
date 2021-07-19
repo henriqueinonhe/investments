@@ -113,7 +113,7 @@ export function InvestmentForm(props : InvestmentFormProps) : JSX.Element {
           value={type}
           onChange={event => setType(event.target.value as InvestmentType | undefined)}
         >
-          <option value={undefined}>-- Select --</option>
+          <option value={undefined}>{`-- ${t("Select")} --`}</option>
           <option value="FIXED">{t("Fixed")}</option>
           <option value="VARIABLE">{t("Variable")}</option>
         </DropdownInput>

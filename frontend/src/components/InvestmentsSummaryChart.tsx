@@ -17,7 +17,7 @@ export const InvestmentsSummaryChart = React.memo((props : InvestmentSummaryChar
   } = props;
 
   const { t } = useTranslation();
-  
+
   const colors = summary?.map(() => randomColor({
     luminosity: "light"
   }));

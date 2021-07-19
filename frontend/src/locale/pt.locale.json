@@ -1,0 +1,20 @@
+{
+  "common": {
+    "Investments": "Investimentos",
+    "Investments Wallet": "Carteira de Investimentos",
+    "Add Investment": "Adicionar Investimento",
+    "Fixed": "Fixa",
+    "Variable": "Variável",
+    "Identifier": "Identificação",
+    "Type": "Tipo",
+    "Amount": "Valor",
+    "Date": "Data",
+    "Select": "Selecionar",
+    "Cancel": "Cancelar",
+    "Save": "Salvar",
+    "Delete this investment?": "Excluir este investimento?",
+    "Yes": "Sim",
+    "No": "Não",
+    "Edit Investment": "Editar Investimento"
+  }
+}

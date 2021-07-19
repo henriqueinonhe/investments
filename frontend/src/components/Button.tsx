@@ -14,10 +14,10 @@ const Container = styled.button<ContainerProps>`
   background-color: ${props => props.variant === "primary" ? props.theme.primaryColor : "white"};
   cursor: pointer;
 
-  &:active {
+  &&:active {
     background-color: ${props => props.variant === "primary" ? 
     darken(0.1, props.theme.primaryColor) : 
-    opacify(0.2, transparentize(1, props.theme.primaryColor))}
+    opacify(0.2, transparentize(1, props.theme.primaryColor))};
   }
 
   &:hover {

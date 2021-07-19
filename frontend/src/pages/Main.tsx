@@ -1,4 +1,4 @@
-import { asyncCallback, useAsync, useIsMounted } from "@henriqueinonhe/react-hooks";
+import { asyncCallback, useIsMounted } from "@henriqueinonhe/react-hooks";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";

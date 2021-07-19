@@ -40,6 +40,7 @@ const EditIcon = styled(FontAwesomeIcon).attrs(() => ({
   icon: faEdit
 })
 )`
+  cursor: pointer;
 `;
 
 const TrashIcon = styled(FontAwesomeIcon).attrs(() => ({
@@ -48,6 +49,7 @@ const TrashIcon = styled(FontAwesomeIcon).attrs(() => ({
 )`
   margin-left: 4px;
   width: 16px;
+  cursor: pointer;
 `;
 
 export interface InvestmentyEntryProps {
