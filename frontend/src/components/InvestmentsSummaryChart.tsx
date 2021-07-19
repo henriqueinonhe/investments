@@ -4,6 +4,7 @@ import randomColor from "randomcolor";
 import { InvestmentsService, InvestmentsSummary } from "../services/InvestmentsService";
 import { useTranslation } from "react-i18next";
 import { ChartConfiguration } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 
 
 export interface InvestmentSummaryChartProps {
@@ -24,9 +25,14 @@ export const InvestmentsSummaryChart = React.memo((props : InvestmentSummaryChar
   const labels = summary?.map(e => 
     t(InvestmentsService.displayableInvestmentType(e.type))) as Array<string> ?? [];
   const values = summary?.map(e => e.sum) ?? [];
+  const total = values.reduce((accum, current) => accum + current, 0);
+  const formatter = (value : number) : string => {
+    return `${value} (${(100 * value / total).toFixed(2)}%)`;
+  };
 
   const config : ChartConfiguration = {
     type: "doughnut",
+    plugins: [ChartDataLabels],
     data: {
       labels: labels,
       datasets: [{
@@ -35,6 +41,13 @@ export const InvestmentsSummaryChart = React.memo((props : InvestmentSummaryChar
         backgroundColor: colors,
         hoverOffset: 4
       }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          formatter: formatter
+        }
+      }
     }
   };
 
