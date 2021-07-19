@@ -49,8 +49,8 @@ export class InvestmentsService {
     //but we want them to be treated as YYYY-MM-DD
 
     return {
-      ...investment
-      // date: Dayjs.utc(investment.date).format("YYYY-MM-DD")
+      ...investment,
+      date: Dayjs.utc(investment.date).format("YYYY-MM-DD")
     };
   }
 
