@@ -5,6 +5,8 @@ import { groupBy } from "lodash";
 import { InvestmentGroup } from "./InvestmentGroup";
 import { Spinner } from "./Spinner";
 import { useTranslation } from "react-i18next";
+import { sortBy } from "lodash";
+import Dayjs from "../helpers/dayjs";
 
 const Container = styled.ul`
   overflow-y: scroll;
@@ -82,11 +84,13 @@ export function InvestmentsDisplay(props : InvestmentsDisplayProps) : JSX.Elemen
   }, [isLoading, setIsLoading, getMoreResults, hasMoreResults]);
 
   const investmentGroups = groupInvestmentsByDate(investments);
+  const sortedInvestmentGroups = investmentGroups.slice().sort((first, second) => 
+    Dayjs(first.date).isSameOrBefore(Dayjs(second.date)) ? -1 : 1);
 
   return (
     <Container>
       {
-        investmentGroups.map(group => 
+        sortedInvestmentGroups.map(group => 
           <InvestmentGroup 
             key={group.date}
             investmentGroup={group}

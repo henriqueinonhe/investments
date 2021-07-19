@@ -17,7 +17,10 @@ export function useLocalization() : LocalizationFunctions {
     currency: "BRL",
     maximumFractionDigits: 2
   }).format;
-  const formatDate = (date : string) : string => new Intl.DateTimeFormat(locale).format(new Date(date));
+  const formatDate = (date : string) : string => 
+    new Intl.DateTimeFormat(locale, {
+      timeZone: "utc"
+    }).format(new Date(date));
 
   return {
     formatNumber,
