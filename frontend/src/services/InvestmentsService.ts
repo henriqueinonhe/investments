@@ -25,8 +25,14 @@ export interface GetInvestmentsQuery {
   perPage ?: number;
 }
 
+export type InvestmentsSummary = Array<{
+  type : InvestmentType;
+  sum : number;
+}>;
+
 export class InvestmentsService {
   private static investmentsPath = "/investments";
+  private static investmentsSummaryPath = "/investmentsSummary";
 
   public static displayableInvestmentType(type : InvestmentType) : string {
     switch(type) {
@@ -106,5 +112,15 @@ export class InvestmentsService {
     });
 
     return this.normalizeInvestmentDate(response.data);
+  }
+
+  public static async getInvestmentsSummary() : Promise<InvestmentsSummary> {
+    const baseClient = await BaseAPIService.getClient();
+    const response = await baseClient.request({
+      url: `${this.investmentsSummaryPath}`,
+      method: "GET"
+    });
+
+    return response.data;
   }
 }
