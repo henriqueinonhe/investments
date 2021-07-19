@@ -1,4 +1,4 @@
-import { asyncCallback, useIsMounted } from "@henriqueinonhe/react-hooks";
+import { asyncCallback, useAsync, useIsMounted } from "@henriqueinonhe/react-hooks";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
@@ -8,9 +8,11 @@ import { FormModal } from "../components/FormModal";
 import { Header } from "../components/Header";
 import { InvestmentForm } from "../components/InvestmentForm";
 import { InvestmentsDisplay } from "../components/InvestmentsDisplay";
+import { InvestmentsSummaryChart } from "../components/InvestmentsSummaryChart";
+import { LoadingComponentWrapper } from "../components/LoadingComponentWrapper";
 import { DeleteInvestmentContext } from "../contexts/DeleteInvestmentContext";
 import { UpdateInvestmentContext } from "../contexts/UpdateInvestmentContext";
-import { CreateInvestmentData, GetInvestmentsQuery, Investment, InvestmentsService, UpdateInvestmentData } from "../services/InvestmentsService";
+import { CreateInvestmentData, GetInvestmentsQuery, Investment, InvestmentsService, InvestmentsSummary, UpdateInvestmentData } from "../services/InvestmentsService";
 
 const Container = styled.div``;
 
@@ -35,7 +37,9 @@ export function Main() : JSX.Element {
   const [investments, setInvestments] = useState<Array<Investment>>([]);
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+  const [investmentsAreLoading, setInvestmentsAreLoading] = useState(true);
+  const [investmentsSummary, setInvestmentsSummary] = useState<InvestmentsSummary>([]);
+  const [investmentsSummaryIsLoading, setInvestmentsSummaryIsLoading] = useState(true);
   const isMounted = useIsMounted();
 
   const [showAddInvestmentModal, setShowAddInvestmentModal] = useState(false);
@@ -44,7 +48,16 @@ export function Main() : JSX.Element {
 
   useEffect(() => {
     getInvestments();
+    getInvestmentsSummary();
   }, []);
+
+  function getInvestmentsSummary() : void {
+    asyncCallback(isMounted, async () => {
+      return await InvestmentsService.getInvestmentsSummary();
+    }, (fetchedInvesmentsSummary) => {
+      setInvestmentsSummary(fetchedInvesmentsSummary);
+    }, setInvestmentsSummaryIsLoading);
+  }
 
   function getMoreResults() : void {
     const nextPage = page + 1;
@@ -62,7 +75,7 @@ export function Main() : JSX.Element {
     }, (data) => {
       setInvestments(investments => [...investments, ...data.data]);
       setLastPage(data.meta.lastPage);
-    }, setIsLoading);
+    }, setInvestmentsAreLoading);
   }
 
   function addInvestment(investment : CreateInvestmentData) : void {
@@ -76,6 +89,7 @@ export function Main() : JSX.Element {
     }, (createdInvestment) => {
       if(createdInvestment) {
         setInvestments(investments => [...investments, createdInvestment]);
+        getInvestmentsSummary();
       }
       setShowAddInvestmentModal(false);
     });
@@ -102,6 +116,7 @@ export function Main() : JSX.Element {
 
           return newInvestments;
         });
+        getInvestmentsSummary();
       }
       setInvestmentToBeUpdated(undefined);
     });
@@ -129,6 +144,7 @@ export function Main() : JSX.Element {
           return newInvestments;
         });
       }
+      getInvestmentsSummary();
       setInvestmentToBeDeleted(undefined);
     });
   }
@@ -156,8 +172,8 @@ export function Main() : JSX.Element {
           <InvestmentsDisplayContainer>
             <InvestmentsDisplay 
               investments={investments}
-              isLoading={isLoading}
-              setIsLoading={setIsLoading}
+              isLoading={investmentsAreLoading}
+              setIsLoading={setInvestmentsAreLoading}
               getMoreResults={getMoreResults}
               hasMoreResults={page !== lastPage}
             />
@@ -166,6 +182,11 @@ export function Main() : JSX.Element {
         </DeleteInvestmentContext.Provider>
       </UpdateInvestmentContext.Provider>
 
+      <LoadingComponentWrapper isLoading={investmentsSummaryIsLoading}>
+        <InvestmentsSummaryChart 
+          summary={investmentsSummary}
+        />
+      </LoadingComponentWrapper>
 
       {
         showAddInvestmentModal &&
@@ -203,3 +224,4 @@ export function Main() : JSX.Element {
     </Container>
   );
 }
+
