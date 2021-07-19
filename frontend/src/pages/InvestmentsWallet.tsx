@@ -5,16 +5,15 @@ import styled from "styled-components";
 import { Button } from "../components/Button";
 import { DeleteInvestmentModal } from "../components/DeleteInvestmentModal";
 import { FormModal } from "../components/FormModal";
-import { Header } from "../components/Header";
 import { InvestmentForm } from "../components/InvestmentForm";
 import { InvestmentsDisplay } from "../components/InvestmentsDisplay";
 import { InvestmentsSummaryChart } from "../components/InvestmentsSummaryChart";
 import { LoadingComponentWrapper } from "../components/LoadingComponentWrapper";
+import { PageLayout } from "../components/PageLayout";
 import { DeleteInvestmentContext } from "../contexts/DeleteInvestmentContext";
 import { UpdateInvestmentContext } from "../contexts/UpdateInvestmentContext";
 import { CreateInvestmentData, GetInvestmentsQuery, Investment, InvestmentsService, InvestmentsSummary, UpdateInvestmentData } from "../services/InvestmentsService";
 
-const Container = styled.div``;
 
 const AddInvestmentButtonRow = styled.div`
   display: flex;
@@ -43,6 +42,12 @@ const LanguageSelectLabel = styled.label``;
 
 const LanguageSelect = styled.select`
   margin-left: 12px;
+`;
+
+const Title = styled.h2`
+  font-size: 24px;
+  text-align: center;
+  margin-top: 20px;
 `;
 
 export function InvestmentsWallet() : JSX.Element {
@@ -163,9 +168,7 @@ export function InvestmentsWallet() : JSX.Element {
   }
 
   return (
-    <Container>
-      <Header />
-
+    <PageLayout>
       <LanguageSelectContainer>
         <LanguageSelectLabel>{t("Language")}</LanguageSelectLabel>
 
@@ -178,6 +181,8 @@ export function InvestmentsWallet() : JSX.Element {
         </LanguageSelect>
       </LanguageSelectContainer>
 
+      <Title>{t("Investments Wallet")}</Title>
+
       <AddInvestmentButtonRow>
         <AddInvestmentButton
           onClick={() => setShowAddInvestmentModal(true)}
@@ -185,7 +190,7 @@ export function InvestmentsWallet() : JSX.Element {
           {t("Add Investment")}
         </AddInvestmentButton>
       </AddInvestmentButtonRow>
-      
+        
       <UpdateInvestmentContext.Provider value={{
         investmentToBeUpdated,
         setInvestmentToBeUpdated
@@ -215,38 +220,38 @@ export function InvestmentsWallet() : JSX.Element {
 
       {
         showAddInvestmentModal &&
-        <FormModal
-          title={t("Add Investment")}
-        >
-          <InvestmentForm 
-            onCancel={() => setShowAddInvestmentModal(false)}
-            onSave={addInvestment}
-          />
-        </FormModal>
+          <FormModal
+            title={t("Add Investment")}
+          >
+            <InvestmentForm 
+              onCancel={() => setShowAddInvestmentModal(false)}
+              onSave={addInvestment}
+            />
+          </FormModal>
       }
 
       {
         investmentToBeUpdated &&
-        <FormModal
-          title={t("Edit Investment")}
-        >
-          <InvestmentForm 
-            onCancel={() => { setInvestmentToBeUpdated(undefined);}}
-            onSave={investment => updateInvestment(investment)}
-            investment={investmentToBeUpdated}
-          />
-        </FormModal>
+          <FormModal
+            title={t("Edit Investment")}
+          >
+            <InvestmentForm 
+              onCancel={() => { setInvestmentToBeUpdated(undefined);}}
+              onSave={investment => updateInvestment(investment)}
+              investment={investmentToBeUpdated}
+            />
+          </FormModal>
       }
 
       {
         investmentToBeDeleted &&
-        <DeleteInvestmentModal 
-          investment={investmentToBeDeleted}
-          onNo={() => setInvestmentToBeDeleted(undefined)}
-          onYes={deleteInvestment}
-        />
+          <DeleteInvestmentModal 
+            investment={investmentToBeDeleted}
+            onNo={() => setInvestmentToBeDeleted(undefined)}
+            onYes={deleteInvestment}
+          />
       }
-    </Container>
+    </PageLayout>
   );
 }
 

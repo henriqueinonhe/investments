@@ -158,7 +158,7 @@ const config = env => {
       overlay: true,
       //Serves index.html to every route (client side routing)
       historyApiFallback: true,
-      https: process.env.HTTPS === "true",
+      https: process.env.USE_HTTPS === "true",
       port: process.env.PORT,
 
       //To be accessible from places other than localhost
