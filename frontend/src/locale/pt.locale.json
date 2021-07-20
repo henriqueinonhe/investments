@@ -24,6 +24,7 @@
     "Investment deleted successfully!": "Investimento excluido com sucesso!",
     "Identifier cannot be empty!": "A identificação é obrigatória!",
     "Amount must be a number!": "O valor deve ser um número!",
-    "Amount must be a positive number!": "O valor deve ser um número positivo!"
+    "Amount must be a positive number!": "O valor deve ser um número positivo!",
+    "There are no investments": " Não há investimentos"
   }
 }
