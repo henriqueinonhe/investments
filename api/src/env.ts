@@ -66,17 +66,11 @@ const environmentSchema = Joi.object<EnvironmentVariables>({
 
   MOCKED_USER: Joi.string(),
 
-  AUTH0_JWKS_URI : Joi.string()
-    .not().empty()
-    .required(),
+  AUTH0_JWKS_URI : Joi.string(),
 
-  AUTH0_AUDIENCE : Joi.string()
-    .not().empty()
-    .required(),
+  AUTH0_AUDIENCE : Joi.string(),
 
-  AUTH0_ISSUER : Joi.string()
-    .not().empty()
-    .required(),
+  AUTH0_ISSUER : Joi.string(),
 
   USE_HTTPS : Joi.string()
 }).unknown();
