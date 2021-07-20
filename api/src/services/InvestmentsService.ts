@@ -8,7 +8,7 @@ import { computeLastPage, defaultEndDate, defaultStartDate, PaginatedEntity } fr
 import Joi from "joi";
 import { AuthorizationError } from "../exceptions/AuthorizationError";
 
-export interface CreateInvestmentData {
+export interface InvestmentCreationData {
   identifier ?: string;
   user ?: string;
   type ?: InvestmentType;
@@ -26,7 +26,7 @@ export interface GetInvestmentsQuery {
   perPage ?: number;
 }
 
-export type UpdateInvestmentData = CreateInvestmentData;
+export type UpdateInvestmentData = InvestmentCreationData;
 
 export type InvestmentSummary = Array<{
   type : InvestmentType;
@@ -34,7 +34,7 @@ export type InvestmentSummary = Array<{
 }>;
 
 export class InvestmentsService {
-  public static async createInvestment(investment : CreateInvestmentData) : Promise<Investment> {
+  public static async createInvestment(investment : InvestmentCreationData) : Promise<Investment> {
     const validationErrorEntries = await this.validateCreateInvestmentData(investment);
 
     if(validationErrorEntries.length !== 0) {
@@ -50,7 +50,7 @@ export class InvestmentsService {
     return createdInvestment;
   }
 
-  private static validateInvestmentData(investment : CreateInvestmentData) : Array<ValidationErrorEntry> {
+  private static validateInvestmentData(investment : InvestmentCreationData) : Array<ValidationErrorEntry> {
     const investmentSchema = Joi.object({
       user: Joi.string()
         .required(),
@@ -86,7 +86,7 @@ export class InvestmentsService {
     return [];
   }
 
-  private static async validateCreateInvestmentData(investment : CreateInvestmentData) : Promise<Array<ValidationErrorEntry>> {
+  private static async validateCreateInvestmentData(investment : InvestmentCreationData) : Promise<Array<ValidationErrorEntry>> {
     const validationErrorEntries : Array<ValidationErrorEntry> = [];
     validationErrorEntries.push(...this.validateInvestmentData(investment));
 
