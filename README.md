@@ -2,6 +2,70 @@
 
 A very simple investments wallet app.
 
+## TL;DR 
+
+Make sure you have these installed:
+
+- Docker
+- Node
+- OpenSSL
+### Installation 
+
+```sh
+git clone https://github.com/henriqueinonhe/investments
+cd investments
+cd api && npm ci
+cd ..
+cd frontend && npm ci
+```
+
+### Configuration
+
+Configure environment variables.
+
+Inside the project's root directory:
+
+```sh
+cp ./api/.env-sample ./api/.env
+cp ./db/.env-sample ./db/.env
+cp ./frontend/.env-sample ./frontend/.env
+```
+
+Generate TLS certificate:
+
+Inside `api`:
+
+```sh
+mkdir certs && cd certs
+openssl req -nodes -new -x509 -keyout server.key -out server.cert
+```
+
+### Running
+
+Make sure ports 3000, 3001 and 3306 are available.
+
+```sh
+docker-compose up
+```
+
+Then run migrations:
+
+```sh
+docker exec -ti InvestmentsAPI
+
+#Inside container
+npx typeorm migration:run
+```
+
+Reset service:
+```sh
+docker restart InvestmentsAPI
+```
+
+API -> `https://localhost:3001`
+Frontend -> `https://localhost:3000`
+DB -> `localhost:3306`
+
 ## Table of Contents
 - [1 Stack](#1-stack)
   * [1.1 API](#11-api)
@@ -47,7 +111,6 @@ A very simple investments wallet app.
 - Linter: [ESLint](https://eslint.org)
 
 ## 2 Pre Requisites
-
 
 - [Docker](https://www.docker.com/)
 - [OpenSSL](https://www.openssl.org/) (optional, to enable HTTPS locally)
