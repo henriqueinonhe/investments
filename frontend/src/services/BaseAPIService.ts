@@ -2,29 +2,32 @@ import Axios, { AxiosInstance } from "axios";
 
 export class BaseAPIService {
   private static baseClient : AxiosInstance;
-  private static isInitialized = false;
+  private static isInitialized : boolean;
+  private static token : string | undefined;
 
-  public static initialize(token ?: string) : void {
+  private static checkIsInitialized() : void {
     if(!this.isInitialized) {
-      this.baseClient = Axios.create({
-        baseURL: process.env.API_BASE_URL,
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-
-      // this.baseClient.interceptors.response.use(value => {
-      //   return value;
-      // }, error => {
-        
-      // });
-
-      this.isInitialized = true;
+      throw Error("LOGIC ERROR! TRYING TO USE UNINITIALIZED API CLIENT!");
     }
   }
 
+  public static isAuthenticated() : boolean {
+    return this.token !== undefined;
+  }
+
+  public static initialize(token ?: string) : void {
+    this.baseClient = Axios.create({
+      baseURL: process.env.API_BASE_URL,
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+
+    this.isInitialized = true;
+  }
+
   public static async getClient() : Promise<AxiosInstance> {
-    this.initialize();
+    this.checkIsInitialized();
     return this.baseClient;
   }
 }

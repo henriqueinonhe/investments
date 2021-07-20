@@ -13,7 +13,6 @@ import { PageLayout } from "../components/PageLayout";
 import { DeleteInvestmentContext } from "../contexts/DeleteInvestmentContext";
 import { UpdateInvestmentContext } from "../contexts/UpdateInvestmentContext";
 import { CreateInvestmentData, GetInvestmentsQuery, Investment, InvestmentsService, InvestmentsSummary, UpdateInvestmentData } from "../services/InvestmentsService";
-import { Notification } from "../components/Notification";
 import { useNotification } from "../hooks/useNotification";
 
 

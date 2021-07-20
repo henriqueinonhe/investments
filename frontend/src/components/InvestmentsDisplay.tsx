@@ -27,6 +27,7 @@ const SpinnerContainer = styled.div`
 
 const NoResults = styled.li`
   text-align: center;
+  margin-top: 20px;
 `;
 
 function groupInvestmentsByDate(investments : Array<Investment>) : Array<InvestmentGroup> {

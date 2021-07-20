@@ -81,7 +81,9 @@ const ModalContainer = styled.div``;
 export function App() : JSX.Element {
   const { isAuthenticated, getAccessTokenSilently, isLoading } = useAuth0();
   const [notificationProps, setNotificationProps] = useState<NotificationProps | undefined>();
+  const [jwtIsSet, setJwtIsSet] = useState(false);
   const isMounted = useIsMounted();
+
 
   useEffect(() => {
     if(isAuthenticated) {
@@ -91,10 +93,10 @@ export function App() : JSX.Element {
         });
       }, (token) => {
         BaseAPIService.initialize(token);
+        setJwtIsSet(true);
       });
     }
   }, [isAuthenticated]);
-  
 
   return (
     <Suspense fallback={<></>}>
@@ -104,7 +106,9 @@ export function App() : JSX.Element {
           <LoadingComponentWrapper isLoading={isLoading}>
             {
               isAuthenticated ?
-                <InvestmentsWallet /> :
+                <LoadingComponentWrapper isLoading={!jwtIsSet}>
+                  <InvestmentsWallet /> 
+                </LoadingComponentWrapper> :
                 <Login />
             }
           </LoadingComponentWrapper>
