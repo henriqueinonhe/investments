@@ -20,6 +20,14 @@ export function randomIdentifier() : string {
   return new RandExp(/\w{3,14}/).gen();
 }
 
+export function randomString() : string {
+  return new RandExp(/\w{1,20}/).gen();
+}
+
+export function randomDate() : string {
+  return `${randomNumber(2000, 2020)}-${randomMonthString()}-${randomDayString()}`;
+}
+
 export function randomInvestmentCreationData() : InvestmentCreationData {
   return {
     type: randomInvestmentType(),

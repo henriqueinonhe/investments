@@ -4,7 +4,7 @@ import { env } from "../../src/env";
 import { InvestmentsRepository } from "../../src/repositories/InvestmentsRepository";
 import { randomInvestmentCreationData, randomList } from "./random";
 
-async function connect() : Promise<Connection> {
+export async function connect() : Promise<Connection> {
   return await createConnection({
     type: "mysql",
     name: "Test Connection",

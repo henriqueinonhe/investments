@@ -7,6 +7,7 @@ import { defaults } from "lodash";
 import { computeLastPage, defaultEndDate, defaultStartDate, PaginatedEntity } from "../helpers/utils";
 import Joi from "joi";
 import { AuthorizationError } from "../exceptions/AuthorizationError";
+import { isValidDate } from "../helpers/date";
 
 export interface InvestmentCreationData {
   identifier ?: string;
@@ -65,25 +66,28 @@ export class InvestmentsService {
 
       value: Joi.number()
         .positive()
-        .required(),
-
-      date: Joi.date()
-        .min(defaultStartDate)
-        .max(defaultEndDate)
         .required()
-
     }).required();
 
     const { error } = investmentSchema.validate(investment);
+
+    const validationErrorEntries : Array<ValidationErrorEntry> = [];
       
     if(error) {
-      return error.details.map((entry) : ValidationErrorEntry => ({
+      validationErrorEntries.push(...error.details.map((entry) : ValidationErrorEntry => ({
         code: `InvalidInvestment${capitalize(entry.context!.key)}`,
         message: entry.message
-      }));
+      })));
     }
 
-    return [];
+    if(!isValidDate(investment.date)) {
+      validationErrorEntries.push({
+        code: "InvalidInvestmentDate",
+        message: "This is not a valid date!"
+      });
+    }
+
+    return validationErrorEntries;
   }
 
   private static async validateCreateInvestmentData(investment : InvestmentCreationData) : Promise<Array<ValidationErrorEntry>> {
