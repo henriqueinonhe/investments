@@ -18,6 +18,12 @@
     "Edit Investment": "Editar Investimento",
     "Language": "Idioma",
     "Fixed Income": "Renda Fixa",
-    "Variable Income": "Renda Variável"
+    "Variable Income": "Renda Variável",
+    "Investment updated successfully!": "Investimento atualizado com sucesso!",
+    "Investment added successfully!": "Investimento adicionado com sucesso!",
+    "Investment deleted successfully!": "Investimento excluido com sucesso!",
+    "Identifier cannot be empty!": "A identificação é obrigatória!",
+    "Amount must be a number!": "O valor deve ser um número!",
+    "Amount must be a positive number!": "O valor deve ser um número positivo!"
   }
 }
