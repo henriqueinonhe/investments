@@ -8,9 +8,7 @@ import { checkHasValidationErrorEntryCode } from "./helpers/validationErrors";
 import { random as randomNumber } from "lodash";
 import { isValidDate } from "../src/helpers/date";
 import { InvestmentsRepository } from "../src/repositories/InvestmentsRepository";
-import { getCustomRepository } from "typeorm";
 import { isEqual } from "lodash";
-import { Investment } from "../src/entities/Investment";
 import { env } from "../src/env";
 
 beforeAll(async () => {
