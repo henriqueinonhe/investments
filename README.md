@@ -21,6 +21,7 @@ A very simple investments wallet app.
 
 
 ## 1 Stack
+
 ### 1.1 API
 
 - Runtime: [Node](https://nodejs.org/en/)
@@ -43,11 +44,13 @@ A very simple investments wallet app.
 
 ## 2 Pre Requisites
 
+
 - [Docker](https://www.docker.com/)
 - [OpenSSL](https://www.openssl.org/) (optional, to enable HTTPS locally)
 - [Node/NPM](https://nodejs.org/en/) (optional, but necessary for development)
 
 ## 3 Installation
+
 
 
 Clone the project:
@@ -66,7 +69,8 @@ From inside the project's root directory, run:
 cd api && npm ci
 cd ..
 cd frontend && npm ci
-```-
+```
+-
 ### 3.1 Rationale
 
 To make it possible for changes in code be reflected in the application without having to rebuild the containers images, both the `frontend` and `api` directories are bind mounted within their respective containers.
@@ -78,6 +82,7 @@ So to solve this issue, there's a normal volume that is mounted within the conta
 The downside is that each time you install a dependency you must do it twice, once inside the container (use `docker exec -ti <container-name> sh` to access it) and then once again in your machine (mostly to enable your code editor's Intellisense and make it stop complaining about missing dependencies).
 
 ## 4 Configuration
+
 
 
 ### 4.1 Environment Variables
@@ -168,7 +173,6 @@ npx typeorm migration:run
 ```
 
 ## 5 Running
-
 
 If you used the configurations present in `.env-sample` for each service, you should be able run the application with:
 
