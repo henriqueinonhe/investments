@@ -1,5 +1,5 @@
 {
-  "ignorePatterns": ["webpack.config.js"],
+  "ignorePatterns": ["webpack.config.js", "node_modules", "public"],
   "env": {
       "browser": true,
       "es2020": true,

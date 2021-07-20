@@ -88,22 +88,6 @@ type ValidationErrorMessageMap = {
   [key in InvestmentValidationErrorCode] : string;
 };
 
-const validationErrorMessageMap : ValidationErrorMessageMap = {
-  EmptyIdentifier: "Identifier cannot be empty!",
-  NonPositiveValue: "Amount must be a positive number!",
-  ValueIsNotANumber: "Amount must be a number!"
-};
-
-function computeErrorMessage(validationErrors : Array<InvestmentValidationErrorCode>, 
-                             codes : Array<InvestmentValidationErrorCode>) : string | null {
-  for(const code of codes) {
-    if(validationErrors.includes(code)) {
-      return validationErrorMessageMap[code];
-    }
-  }
-
-  return null;
-}
 
 export interface InvestmentFormProps {
   investment ?: CreateInvestmentData;
@@ -117,7 +101,7 @@ export function InvestmentForm(props : InvestmentFormProps) : JSX.Element {
     onCancel,
     onSave
   } = props;
-
+  
   const initialIdentifier = investment?.identifier ?? "";
   const initialType = investment?.type ?? "FIXED";
   const initialValue = investment?.value?.toFixed(2).toString() ?? "";
@@ -134,6 +118,23 @@ export function InvestmentForm(props : InvestmentFormProps) : JSX.Element {
   const isMounted = useIsMounted();
 
   const { t } = useTranslation();
+
+  const validationErrorMessageMap : ValidationErrorMessageMap = {
+    EmptyIdentifier: t("Identifier cannot be empty!"),
+    NonPositiveValue: t("Amount must be a positive number!"),
+    ValueIsNotANumber: t("Amount must be a number!")
+  };
+
+  function computeErrorMessage(validationErrors : Array<InvestmentValidationErrorCode>, 
+                               codes : Array<InvestmentValidationErrorCode>) : string | null {
+    for(const code of codes) {
+      if(validationErrors.includes(code)) {
+        return validationErrorMessageMap[code];
+      }
+    }
+
+    return null;
+  }
 
   function handleSaveButtonClicked() : void {
     const investment : CreateInvestmentData = {

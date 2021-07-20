@@ -124,7 +124,7 @@ export function InvestmentsWallet() : JSX.Element {
     setShowAddInvestmentModal(false);
     showNotification({
       variant: "success",
-      text: t("Invesment added successfully!")
+      text: t("Investment added successfully!")
     });
   }
 
@@ -147,7 +147,7 @@ export function InvestmentsWallet() : JSX.Element {
     setInvestmentToBeUpdated(undefined);
     showNotification({
       variant: "success",
-      text: t("Invesment updated successfully!")
+      text: t("Investment updated successfully!")
     });
   }
 
@@ -170,7 +170,7 @@ export function InvestmentsWallet() : JSX.Element {
     setInvestmentToBeDeleted(undefined);
     showNotification({
       variant: "success",
-      text: t("Invesment deleted successfully!")
+      text: t("Investment deleted successfully!")
     });
   }
 
