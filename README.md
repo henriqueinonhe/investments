@@ -18,6 +18,8 @@ A very simple investments wallet app.
   * [4.2 SSL/TLS Certificate](#42-ssltls-certificate)
   * [4.3 Migrations](#43-migrations)
 - [5 Running](#5-running)
+- [6 Documentation](#6-documentation)
+- [7 Troubleshooting](#7-troubleshooting)
 
 
 ## 1 Stack
@@ -51,8 +53,6 @@ A very simple investments wallet app.
 
 ## 3 Installation
 
-
-
 Clone the project:
 
 ```sh
@@ -70,8 +70,7 @@ cd api && npm ci
 cd ..
 cd frontend && npm ci
 ```
--
-### 3.1 Rationale
+### Rationale
 
 To make it possible for changes in code be reflected in the application without having to rebuild the containers images, both the `frontend` and `api` directories are bind mounted within their respective containers.
 
@@ -212,5 +211,25 @@ API is documented using Swagger UI and is accessible at the root path `/`.
 
 ## 7 Troubleshooting
 
+### Required tables doesn't exist
+```
+QueryFailedError: Table '<DB_NAME>.Investments doesn't exist
+```
 
+Did you run the [migrations](#43-migrations)?
+
+### Invalid SSL Certificate when calling API from browser
+
+Caused by using a self signed certificate, you just need to tell your browser to accept it.
+
+Go to `<API_BASE_URL>` via browser and accept the security prompt.
+
+Or run everything through HTTP by setting environment variable `USE_HTTPS` to false both in frontend and api.
+### Problems with missing entity metadata in API
+
+After running migrations you must restart the API container:
+
+```sh
+docker restart InvestmentsAPI
+```
 
