@@ -16,6 +16,19 @@ const Container = styled.li`
   margin-top: 12px;
 `;
 
+const LeftColumn = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const RightColumn = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+  flex-shrink: 1;
+  min-width: 0;
+`;
+
 const InvestmentBaseField = styled.div`
   font-size: 12px;
 
@@ -30,22 +43,29 @@ const InvestmentBaseField = styled.div`
 
 const InvestmentTypeField = styled(InvestmentBaseField)`
   margin-left: 4px;
+  width: 48px;
+
+  @media (min-width: 368px) and (max-width: 425px) {
+    font-size: 14px;
+    width: 62px;
+  }
+
+  @media (min-width: 426px) {
+    font-size: 16px;
+    width: 70px;
+  }
 `;
 
 const InvestmentIdentifierField = styled(InvestmentBaseField)`
   margin-left: 12px;
   text-overflow: ellipsis;
   overflow: hidden;
+  min-width: 0;
 `;
 
 const InvestmentValueField = styled(InvestmentBaseField)`
   margin-left: 12px;
   white-space: nowrap;
-`;
-
-const IconAndInvestmentTypeContainer = styled.div`
-  display: flex;
-  align-items: center;
 `;
 
 const BaseIcon = styled(FontAwesomeIcon)`
@@ -86,15 +106,17 @@ export const InvestmentEntry = React.memo((props : InvestmentyEntryProps) => {
 
   return (
     <Container>
-      <IconAndInvestmentTypeContainer>
+      <LeftColumn>
         <EditIcon onClick={() => setInvestmentToBeUpdated(investment)}/>
         <TrashIcon onClick={() => setInvestmentToBeDeleted(investment)}/>
         <InvestmentTypeField>{t(displayableInvestmentType)}</InvestmentTypeField>
-      </IconAndInvestmentTypeContainer>
+      </LeftColumn>
       
-      <InvestmentIdentifierField>{investment.identifier}</InvestmentIdentifierField>
+      <RightColumn>
+        <InvestmentIdentifierField>{investment.identifier}</InvestmentIdentifierField>
 
-      <InvestmentValueField>{formattedValue}</InvestmentValueField>
+        <InvestmentValueField>{formattedValue}</InvestmentValueField>
+      </RightColumn>
     </Container>
   );
 });
