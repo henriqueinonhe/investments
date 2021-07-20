@@ -51,7 +51,7 @@ docker-compose up
 Then run migrations:
 
 ```sh
-docker exec -ti InvestmentsAPI
+docker exec -ti InvestmentsAPI sh
 
 #Inside container
 npx typeorm migration:run
@@ -61,6 +61,8 @@ Reset service:
 ```sh
 docker restart InvestmentsAPI
 ```
+
+Access both API and Frontend via browser to allow the self signed certificates.
 
 API -> `https://localhost:3001`
 Frontend -> `https://localhost:3000`
