@@ -9,19 +9,14 @@ const rootNode = document.createElement("div")!;
 rootNode.id = "root";
 body.appendChild(rootNode);
 
-// if(process.env.USE_AUTH0! === "true") {
-  ReactDOM.render(
-    <Auth0Provider
-      domain={process.env.AUTH0_DOMAIN!}
-      clientId={process.env.AUTH0_CLIENT_ID!}
-      redirectUri={window.location.origin}
-      audience={process.env.AUTH0_AUDIENCE!}
-    >
-      <App />
-    </Auth0Provider>, 
-    rootNode
-  );
-// }
-// else {
-//   ReactDOM.render(<App />, rootNode);
-// }
+ReactDOM.render(
+  <Auth0Provider
+    domain={process.env.AUTH0_DOMAIN!}
+    clientId={process.env.AUTH0_CLIENT_ID!}
+    redirectUri={window.location.origin}
+    audience={process.env.AUTH0_AUDIENCE!}
+  >
+    <App />
+  </Auth0Provider>, 
+  rootNode
+);

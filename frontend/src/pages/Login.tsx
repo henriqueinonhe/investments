@@ -1,10 +1,10 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Button } from "../components/Button";
 import { faWallet } from "@fortawesome/free-solid-svg-icons";
+import { useMyAuth0 } from "../hooks/useMyAuth0";
 
 const Container = styled.div`
   background-color: #DDD;
@@ -61,7 +61,7 @@ const WalletIcon = styled(FontAwesomeIcon).attrs(() => ({
 `;
 
 export function Login() : JSX.Element {
-  const { loginWithRedirect } = useAuth0();
+  const { loginWithRedirect } = useMyAuth0();
   const { t } = useTranslation();
 
   return (

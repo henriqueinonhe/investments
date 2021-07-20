@@ -3,14 +3,13 @@ import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 import { InvestmentsWallet } from "./pages/InvestmentsWallet";
 import { lightTheme } from "./helpers/theme";
 import { Login } from "./pages/Login";
-import { useAuth0 } from "@auth0/auth0-react";
 import { asyncCallback, useIsMounted } from "@henriqueinonhe/react-hooks";
 import { BaseAPIService } from "./services/BaseAPIService";
 import { LoadingComponentWrapper } from "./components/LoadingComponentWrapper";
 import "../assets/fontCss.css";
 import { NotificationProps, Notification } from "./components/Notification";
 import { NotificationContext } from "./contexts/NotificationContext";
-import { features } from "./helpers/featureFlags";
+import { useMyAuth0 } from "./hooks/useMyAuth0";
 
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
@@ -80,17 +79,10 @@ const GlobalStyle = createGlobalStyle`
 const ModalContainer = styled.div``;
 
 export function App() : JSX.Element {
-  const { isAuthenticated, getAccessTokenSilently, isLoading } = useAuth0();
+  const { isAuthenticated, getAccessTokenSilently, isLoading } = useMyAuth0();
   const [notificationProps, setNotificationProps] = useState<NotificationProps | undefined>();
   const [apiServiceIsAuthenticated, setApiServiceIsAuthenticated] = useState(false);
   const isMounted = useIsMounted();
-
-  useEffect(() => {
-    if(!features.Auth0) {
-      BaseAPIService.initialize();
-      setApiServiceIsAuthenticated(true);
-    }
-  }, []);
 
   useEffect(() => {
     if(isAuthenticated) {
@@ -113,7 +105,7 @@ export function App() : JSX.Element {
         <NotificationContext.Provider value={{setNotificationProps}}>
           <LoadingComponentWrapper isLoading={isLoading}>
             {
-              isAuthenticated || !features.Auth0 ?
+              isAuthenticated ?
                 <LoadingComponentWrapper isLoading={!apiServiceIsAuthenticated}>
                   <InvestmentsWallet /> 
                 </LoadingComponentWrapper> :

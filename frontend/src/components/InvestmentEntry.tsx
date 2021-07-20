@@ -50,15 +50,7 @@ const IconAndInvestmentTypeContainer = styled.div`
 
 const BaseIcon = styled(FontAwesomeIcon)`
   cursor: pointer;
-  font-size: 12px;
-
-  @media (min-width: 368px) and (max-width: 425px) {
-    font-size: 14px;
-  }
-
-  @media (min-width: 426px) {
     font-size: 16px;
-  }
 `;
 
 const EditIcon = styled(BaseIcon).attrs(() => ({
