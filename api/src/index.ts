@@ -31,8 +31,8 @@ import fs from "fs";
   
   if(env.USE_HTTPS === "true") {
     const server = https.createServer({
-      key: fs.readFileSync("./certs/server-key.pem"),
-      cert: fs.readFileSync("./certs/server-cert.pem")
+      key: fs.readFileSync("./certs/server.key"),
+      cert: fs.readFileSync("./certs/server.cert")
     }, app);
     
     server.listen(env.PORT, () => {

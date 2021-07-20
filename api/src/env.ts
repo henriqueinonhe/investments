@@ -64,15 +64,20 @@ const environmentSchema = Joi.object<EnvironmentVariables>({
   TYPEORM_MIGRATIONS_TABLE_NAME: Joi.string()
     .required(),
 
-  MOCKED_USER: Joi.string(),
+  MOCKED_USER: Joi.string()
+    .allow(""),
 
-  AUTH0_JWKS_URI : Joi.string(),
+  AUTH0_JWKS_URI : Joi.string()
+    .allow(""),
 
-  AUTH0_AUDIENCE : Joi.string(),
+  AUTH0_AUDIENCE : Joi.string()
+    .allow(""),
 
-  AUTH0_ISSUER : Joi.string(),
+  AUTH0_ISSUER : Joi.string()
+    .allow(""),
 
   USE_HTTPS : Joi.string()
+    .allow("")
 }).unknown();
 
 const { value, error } = environmentSchema.validate(process.env);
