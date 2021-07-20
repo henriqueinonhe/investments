@@ -18,8 +18,9 @@ A very simple investments wallet app.
   * [4.2 SSL/TLS Certificate](#42-ssltls-certificate)
   * [4.3 Migrations](#43-migrations)
 - [5 Running](#5-running)
-- [6 Documentation](#6-documentation)
-- [7 Troubleshooting](#7-troubleshooting)
+- [6 Testing](#6-testing)
+- [7 Documentation](#7-documentation)
+- [8 Troubleshooting](#8-troubleshooting)
 
 
 ## 1 Stack
@@ -31,6 +32,7 @@ A very simple investments wallet app.
 - Framework: [Express](https://expressjs.com/)
 - ORM: [TypeORM](https://typeorm.io/#/)
 - Linter: [ESLint](https://eslint.org)
+- Testing: [Jest](https://jestjs.io/)
 
 ### 1.2 DB
 
@@ -205,11 +207,21 @@ docker exec -ti <container-name> sh
 
 **DON'T FORGET TO RUN [MIGRATIONS](#migrations)!**
 
-## 6 Documentation 
+## 6 Testing
+
+There are currently a few API integration tests using Jest.
+
+In order to run them you need to access the API container and then run jest:
+
+```sh
+docker exec -ti InvestmentsAPI
+npx jest
+```
+## 7 Documentation 
 
 API is documented using Swagger UI and is accessible at the root path `/`.
 
-## 7 Troubleshooting
+## 8 Troubleshooting
 
 ### Required tables doesn't exist
 ```
