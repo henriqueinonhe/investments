@@ -11,7 +11,7 @@ import { useLocalization } from "../hooks/useLocalization";
 
 const Container = styled.li`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   margin-top: 12px;
 `;
@@ -50,7 +50,7 @@ const IconAndInvestmentTypeContainer = styled.div`
 
 const BaseIcon = styled(FontAwesomeIcon)`
   cursor: pointer;
-    font-size: 16px;
+  font-size: 16px;
 `;
 
 const EditIcon = styled(BaseIcon).attrs(() => ({

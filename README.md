@@ -149,6 +149,8 @@ You will be prompted to answer a some questions, but you can just leave them bla
 
 And *voila*, you're all set.
 
+P.S. As the certificate is self-signed, you'll probably need to access the API via browser first (`/` path leads to the API documentation), before consuming it via the frontend.
+
 ### 4.3 Migrations
 
 **After** running the application the first thing you'll need to do is to run the migrations to setup the DB tables.
@@ -160,6 +162,12 @@ docker exec -ti InvestmentsAPI sh
 
 #Now inside the container
 npx typeorm migration:run
+```
+
+And then restart the API container so that it picks up generated entity metadata.
+
+```sh
+docker restart InvestmentsAPI
 ```
 
 You may also run them from outside the container, you just need to compile the code and tweak `DB_HOST` so that it points to the DB from outside the container:
@@ -197,4 +205,12 @@ docker exec -ti <container-name> sh
 ```
 
 **DON'T FORGET TO RUN [MIGRATIONS](#migrations)!**
+
+## 6 Documentation 
+
+API is documented using Swagger UI and is accessible at the root path `/`.
+
+## 7 Troubleshooting
+
+
 
