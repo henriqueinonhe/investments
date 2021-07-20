@@ -9,16 +9,16 @@ export async function handleError(error : ErrorRequestHandler,
                                   res : Response, 
                                   // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                   next : NextFunction) : Promise<void> {
-  console.log({
-    req: {
-      url: req.originalUrl,
-      parameters: req.params,
-      query: req.query,
-      body: req.body,
-      ip: req.ip
-    },
-    error: inspect(error)
-  });
+  // console.log({
+  //   req: {
+  //     url: req.originalUrl,
+  //     parameters: req.params,
+  //     query: req.query,
+  //     body: req.body,
+  //     ip: req.ip
+  //   },
+  //   error: inspect(error)
+  // });
 
   if(error instanceof ValidationError) {
     res.status(422).send({ error });

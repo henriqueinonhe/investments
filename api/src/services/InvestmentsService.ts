@@ -7,8 +7,9 @@ import { defaults } from "lodash";
 import { computeLastPage, defaultEndDate, defaultStartDate, PaginatedEntity } from "../helpers/utils";
 import Joi from "joi";
 import { AuthorizationError } from "../exceptions/AuthorizationError";
+import { isValidDate } from "../helpers/date";
 
-export interface CreateInvestmentData {
+export interface InvestmentCreationData {
   identifier ?: string;
   user ?: string;
   type ?: InvestmentType;
@@ -26,7 +27,7 @@ export interface GetInvestmentsQuery {
   perPage ?: number;
 }
 
-export type UpdateInvestmentData = CreateInvestmentData;
+export type UpdateInvestmentData = InvestmentCreationData;
 
 export type InvestmentSummary = Array<{
   type : InvestmentType;
@@ -34,7 +35,7 @@ export type InvestmentSummary = Array<{
 }>;
 
 export class InvestmentsService {
-  public static async createInvestment(investment : CreateInvestmentData) : Promise<Investment> {
+  public static async createInvestment(investment : InvestmentCreationData) : Promise<Investment> {
     const validationErrorEntries = await this.validateCreateInvestmentData(investment);
 
     if(validationErrorEntries.length !== 0) {
@@ -50,7 +51,7 @@ export class InvestmentsService {
     return createdInvestment;
   }
 
-  private static validateInvestmentData(investment : CreateInvestmentData) : Array<ValidationErrorEntry> {
+  private static validateInvestmentData(investment : InvestmentCreationData) : Array<ValidationErrorEntry> {
     const investmentSchema = Joi.object({
       user: Joi.string()
         .required(),
@@ -65,28 +66,31 @@ export class InvestmentsService {
 
       value: Joi.number()
         .positive()
-        .required(),
-
-      date: Joi.date()
-        .min(defaultStartDate)
-        .max(defaultEndDate)
         .required()
-
-    }).required();
+    }).required().unknown();
 
     const { error } = investmentSchema.validate(investment);
+
+    const validationErrorEntries : Array<ValidationErrorEntry> = [];
       
     if(error) {
-      return error.details.map((entry) : ValidationErrorEntry => ({
+      validationErrorEntries.push(...error.details.map((entry) : ValidationErrorEntry => ({
         code: `InvalidInvestment${capitalize(entry.context!.key)}`,
         message: entry.message
-      }));
+      })));
     }
 
-    return [];
+    if(!isValidDate(investment.date)) {
+      validationErrorEntries.push({
+        code: "InvalidInvestmentDate",
+        message: "This is not a valid date!"
+      });
+    }
+
+    return validationErrorEntries;
   }
 
-  private static async validateCreateInvestmentData(investment : CreateInvestmentData) : Promise<Array<ValidationErrorEntry>> {
+  private static async validateCreateInvestmentData(investment : InvestmentCreationData) : Promise<Array<ValidationErrorEntry>> {
     const validationErrorEntries : Array<ValidationErrorEntry> = [];
     validationErrorEntries.push(...this.validateInvestmentData(investment));
 

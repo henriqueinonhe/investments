@@ -17,7 +17,7 @@
     "experimentalDecorators": true,
     "strictPropertyInitialization": false
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "tests/**/*"],
   "typedocOptions": {
     "out": "docs",
     "inputFiles":["./src"],
