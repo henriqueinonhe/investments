@@ -107,8 +107,8 @@ function computeErrorMessage(validationErrors : Array<InvestmentValidationErrorC
 
 export interface InvestmentFormProps {
   investment ?: CreateInvestmentData;
-  onCancel : () => void;
-  onSave : (investment : CreateInvestmentData) => void;
+  onCancel : () => Promise<void>;
+  onSave : (investment : CreateInvestmentData) => Promise<void>;
 }
 
 export function InvestmentForm(props : InvestmentFormProps) : JSX.Element {

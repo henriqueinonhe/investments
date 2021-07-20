@@ -1,8 +1,11 @@
-import React from "react";
+import { asyncCallback, useIsMounted } from "@henriqueinonhe/react-hooks";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import { useLocalization } from "../hooks/useLocalization";
 import { Investment, InvestmentsService } from "../services/InvestmentsService";
 import { Button } from "./Button";
+import { CenteredSpinner } from "./CenteredSpinner";
 import { Modal } from "./Modal";
 
 const Container = styled.div`
@@ -54,8 +57,8 @@ const NoButton = styled(Button)`
 
 export interface DeleteInvestmentModalProps {
   investment : Investment;
-  onYes : () => void;
-  onNo : () => void;
+  onYes : () => Promise<void>;
+  onNo : () => Promise<void>;
 }
 
 export function DeleteInvestmentModal(props : DeleteInvestmentModalProps) : JSX.Element {
@@ -66,6 +69,9 @@ export function DeleteInvestmentModal(props : DeleteInvestmentModalProps) : JSX.
   } = props;
 
   const { t } = useTranslation();
+  const [saveIsLoading, setSaveIsLoading] = useState(false);
+  const { formatDate, formatCurrency } = useLocalization();
+  const isMounted = useIsMounted();
 
   const {
     identifier,
@@ -74,6 +80,22 @@ export function DeleteInvestmentModal(props : DeleteInvestmentModalProps) : JSX.
     date
   } = investment;
 
+  function handleYes() : void {
+    asyncCallback(isMounted, async () => {
+      await onYes();
+    }, () => {
+      //
+    }, setSaveIsLoading);
+  }
+
+  function handleNo() : void {
+    asyncCallback(isMounted, async () => {
+      await onNo();
+    }, () => {
+      //
+    }, setSaveIsLoading);
+  }
+
   return (
     <Modal>
       <Container>
@@ -81,28 +103,35 @@ export function DeleteInvestmentModal(props : DeleteInvestmentModalProps) : JSX.
           <Title>{t("Delete this investment?")}</Title>
 
           <InvestmentDataContainer>
-            <InvestmentDataField>{t("Date")}: {date}</InvestmentDataField>
+            <InvestmentDataField>{t("Date")}: {formatDate(date)}</InvestmentDataField>
             <InvestmentDataField>{t("Type")}: {t(InvestmentsService.displayableInvestmentType(type))}</InvestmentDataField>
             <InvestmentDataField>{t("Identifier")}: {identifier}</InvestmentDataField>
-            <InvestmentDataField>{t("Amount")}: R$ {value}</InvestmentDataField>
+            <InvestmentDataField>{t("Amount")}: {formatCurrency(value)}</InvestmentDataField>
           </InvestmentDataContainer>
 
           <ButtonRow>
             <NoButton
               variant="secondary"
-              onClick={onNo}
+              onClick={handleNo}
             >
               {t("No")}
             </NoButton>
 
             <YesButton
-              onClick={onYes}
+              onClick={handleYes}
             >
               {t("Yes")}
             </YesButton>
           </ButtonRow>
         </Content>
       </Container>
+
+      {
+        saveIsLoading &&
+        <Modal>
+          <CenteredSpinner />
+        </Modal>
+      }
     </Modal>
   );
 }
