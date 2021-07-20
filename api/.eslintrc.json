@@ -1,4 +1,5 @@
 {
+"ignorePatterns": ["node_modules", "public", "dist"],
   "env": {
       "es2020": true,
       "node": true

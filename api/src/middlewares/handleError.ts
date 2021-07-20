@@ -7,6 +7,7 @@ import { inspect } from "util";
 export async function handleError(error : ErrorRequestHandler, 
                                   req : Request, 
                                   res : Response, 
+                                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                   next : NextFunction) : Promise<void> {
   console.log({
     req: {
