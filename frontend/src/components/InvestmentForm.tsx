@@ -119,7 +119,7 @@ export function InvestmentForm(props : InvestmentFormProps) : JSX.Element {
   } = props;
 
   const initialIdentifier = investment?.identifier ?? "";
-  const initialType = investment?.type;
+  const initialType = investment?.type ?? "FIXED";
   const initialValue = investment?.value?.toFixed(2).toString() ?? "";
   const initialDate = investment?.date ? 
     Dayjs.utc(investment.date).format("YYYY-MM-DD") : 

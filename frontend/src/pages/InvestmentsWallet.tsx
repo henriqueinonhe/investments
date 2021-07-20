@@ -13,6 +13,8 @@ import { PageLayout } from "../components/PageLayout";
 import { DeleteInvestmentContext } from "../contexts/DeleteInvestmentContext";
 import { UpdateInvestmentContext } from "../contexts/UpdateInvestmentContext";
 import { CreateInvestmentData, GetInvestmentsQuery, Investment, InvestmentsService, InvestmentsSummary, UpdateInvestmentData } from "../services/InvestmentsService";
+import { Notification } from "../components/Notification";
+import { useNotification } from "../hooks/useNotification";
 
 
 const AddInvestmentButtonRow = styled.div`
@@ -81,6 +83,8 @@ export function InvestmentsWallet() : JSX.Element {
   const [investmentToBeUpdated, setInvestmentToBeUpdated] = useState<Investment | undefined>();
   const [investmentToBeDeleted, setInvestmentToBeDeleted] = useState<Investment | undefined>();
 
+  const showNotification = useNotification();
+
   useEffect(() => {
     getInvestments();
     getInvestmentsSummary();
@@ -115,72 +119,66 @@ export function InvestmentsWallet() : JSX.Element {
 
   function addInvestment(investment : CreateInvestmentData) : void {
     asyncCallback(isMounted, async () => {
-      try {
-        return await InvestmentsService.createInvestment(investment);
-      }
-      catch(error) {
-        console.log(error);
-      }
+      return await InvestmentsService.createInvestment(investment);
     }, (createdInvestment) => {
-      if(createdInvestment) {
-        setInvestments(investments => [...investments, createdInvestment]);
-        getInvestmentsSummary();
-      }
+
+      setInvestments(investments => [...investments, createdInvestment]);
+      getInvestmentsSummary();
       setShowAddInvestmentModal(false);
+      showNotification({
+        variant: "success",
+        text: t("Invesment added successfully!")
+      });
     });
   }
 
   function updateInvestment(newInvestment : UpdateInvestmentData) : void {
     asyncCallback(isMounted, async () => {
-      try {
-        return await InvestmentsService.updateInvestment(investmentToBeUpdated!.id, newInvestment);
-      }
-      catch(error) {
-        console.log(error.response.data);
-      }
+      return await InvestmentsService.updateInvestment(investmentToBeUpdated!.id, newInvestment);
     }, (updatedInvestment) => {
-      if(updatedInvestment) {
-        //This could be O(1) if the id is passed 
-        //altoghether the investment to the InvestmentEntry 
-        //component
-        setInvestments(investments => {
-          const newInvestments = investments.slice();
-          const updatedInvestmentIndex = newInvestments
-            .findIndex(entry => entry.id === updatedInvestment.id);
-          newInvestments[updatedInvestmentIndex] = updatedInvestment;
+      //This could be O(1) if the id is passed 
+      //altoghether the investment to the InvestmentEntry 
+      //component
+      setInvestments(investments => {
+        const newInvestments = investments.slice();
+        const updatedInvestmentIndex = newInvestments
+          .findIndex(entry => entry.id === updatedInvestment.id);
+        newInvestments[updatedInvestmentIndex] = updatedInvestment;
 
-          return newInvestments;
-        });
-        getInvestmentsSummary();
-      }
+        return newInvestments;
+      });
+
+      getInvestmentsSummary();
       setInvestmentToBeUpdated(undefined);
+      showNotification({
+        variant: "success",
+        text: t("Invesment updated successfully!")
+      });
     });
   }
 
   function deleteInvestment() : void {
     asyncCallback(isMounted, async () => {
-      try {
-        return await InvestmentsService.deleteInvestment(investmentToBeDeleted!.id);
-      }
-      catch(error) {
-        console.log(error.response.data);
-      }
+      return await InvestmentsService.deleteInvestment(investmentToBeDeleted!.id);
     }, (deletedInvestment) => {
-      if(deletedInvestment) {
-        //This could be O(1) if the id is passed 
-        //altoghether the investment to the InvestmentEntry 
-        //component
-        setInvestments(investments => {
-          const newInvestments = investments.slice();
-          const deletedInvestmentIndex = newInvestments
-            .findIndex(entry => entry.id === deletedInvestment.id);
-          newInvestments.splice(deletedInvestmentIndex, 1);
+      //This could be O(1) if the id is passed 
+      //altoghether the investment to the InvestmentEntry 
+      //component
+      setInvestments(investments => {
+        const newInvestments = investments.slice();
+        const deletedInvestmentIndex = newInvestments
+          .findIndex(entry => entry.id === deletedInvestment.id);
+        newInvestments.splice(deletedInvestmentIndex, 1);
 
-          return newInvestments;
-        });
-      }
+        return newInvestments;
+      });
+
       getInvestmentsSummary();
       setInvestmentToBeDeleted(undefined);
+      showNotification({
+        variant: "success",
+        text: t("Invesment deleted successfully!")
+      });
     });
   }
 
@@ -257,7 +255,7 @@ export function InvestmentsWallet() : JSX.Element {
             title={t("Edit Investment")}
           >
             <InvestmentForm 
-              onCancel={() => { setInvestmentToBeUpdated(undefined);}}
+              onCancel={() => { setInvestmentToBeUpdated(undefined); }}
               onSave={investment => updateInvestment(investment)}
               investment={investmentToBeUpdated}
             />

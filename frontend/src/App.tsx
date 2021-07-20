@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 import { InvestmentsWallet } from "./pages/InvestmentsWallet";
 import { lightTheme } from "./helpers/theme";
@@ -8,6 +8,8 @@ import { asyncCallback, useIsMounted } from "@henriqueinonhe/react-hooks";
 import { BaseAPIService } from "./services/BaseAPIService";
 import { LoadingComponentWrapper } from "./components/LoadingComponentWrapper";
 import "../assets/fontCss.css";
+import { NotificationProps, Notification } from "./components/Notification";
+import { NotificationContext } from "./contexts/NotificationContext";
 
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
@@ -78,6 +80,7 @@ const ModalContainer = styled.div``;
 
 export function App() : JSX.Element {
   const { isAuthenticated, getAccessTokenSilently, isLoading } = useAuth0();
+  const [notificationProps, setNotificationProps] = useState<NotificationProps | undefined>();
   const isMounted = useIsMounted();
 
   useEffect(() => {
@@ -97,14 +100,22 @@ export function App() : JSX.Element {
     <Suspense fallback={<></>}>
       <GlobalStyle />
       <ThemeProvider theme={lightTheme}>
-        <LoadingComponentWrapper isLoading={isLoading}>
-          {
-            isAuthenticated ?
-              <InvestmentsWallet /> :
-              <Login />
-          }
-        </LoadingComponentWrapper>
+        <NotificationContext.Provider value={{setNotificationProps}}>
+          <LoadingComponentWrapper isLoading={isLoading}>
+            {
+              isAuthenticated ?
+                <InvestmentsWallet /> :
+                <Login />
+            }
+          </LoadingComponentWrapper>
+        </NotificationContext.Provider>
+
         <ModalContainer id="modalContainer"/>
+        
+        {
+          notificationProps &&
+          <Notification {...notificationProps}/>
+        }
       </ThemeProvider>
     </Suspense>
   );
