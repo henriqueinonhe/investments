@@ -13,7 +13,7 @@ services:
       - /home/app/node_modules
       - /home/app/dist
     ports:
-      - 3001:80
+      - 3001:443
     command: npm run watchAndRun
 
   db:
@@ -35,7 +35,7 @@ services:
     environment: 
       SOCK_PORT: 3000
     ports:
-      - 3000:80
+      - 3000:443
     command: npm run dev-start
     
 
