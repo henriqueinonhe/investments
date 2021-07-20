@@ -96,6 +96,7 @@ export function App() : JSX.Element {
         setJwtIsSet(true);
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   return (

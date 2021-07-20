@@ -87,6 +87,7 @@ export function InvestmentsWallet() : JSX.Element {
   useEffect(() => {
     getInvestments();
     getInvestmentsSummary();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function getInvestmentsSummary() : void {

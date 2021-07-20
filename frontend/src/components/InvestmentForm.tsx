@@ -140,7 +140,7 @@ export function InvestmentForm(props : InvestmentFormProps) : JSX.Element {
     const investment : CreateInvestmentData = {
       identifier: identifier.trim(),
       type: type as InvestmentType,
-      value: parseFloat(value),
+      value: parseFloat(value.replace(/,/g, ".")),
       date
     };
 
