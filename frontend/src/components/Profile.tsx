@@ -2,6 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import { features } from "../helpers/featureFlags";
 import { Button } from "./Button";
 
 const Container = styled.div`
@@ -52,14 +53,14 @@ export const Profile = React.memo(() => {
         <Photo src={user?.picture}/>
 
         <Info>
-          <Name>{user?.name}</Name>
-          <Email>{user?.email}</Email>
+          <Name>{user?.name ?? "Test User"}</Name>
+          <Email>{user?.email ?? "email@example.com"}</Email>
         </Info>
       </LeftColumn>
 
       <RightColumn>
         <LogoutButton
-          onClick={() => logout()}
+          onClick={() => features.Auth0 && logout()}
         >
           {t("Logout")}
         </LogoutButton>

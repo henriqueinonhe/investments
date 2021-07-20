@@ -10,6 +10,7 @@ import { LoadingComponentWrapper } from "./components/LoadingComponentWrapper";
 import "../assets/fontCss.css";
 import { NotificationProps, Notification } from "./components/Notification";
 import { NotificationContext } from "./contexts/NotificationContext";
+import { features } from "./helpers/featureFlags";
 
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
@@ -81,9 +82,15 @@ const ModalContainer = styled.div``;
 export function App() : JSX.Element {
   const { isAuthenticated, getAccessTokenSilently, isLoading } = useAuth0();
   const [notificationProps, setNotificationProps] = useState<NotificationProps | undefined>();
-  const [jwtIsSet, setJwtIsSet] = useState(false);
+  const [apiServiceIsAuthenticated, setApiServiceIsAuthenticated] = useState(false);
   const isMounted = useIsMounted();
 
+  useEffect(() => {
+    if(!features.Auth0) {
+      BaseAPIService.initialize();
+      setApiServiceIsAuthenticated(true);
+    }
+  }, []);
 
   useEffect(() => {
     if(isAuthenticated) {
@@ -93,7 +100,7 @@ export function App() : JSX.Element {
         });
       }, (token) => {
         BaseAPIService.initialize(token);
-        setJwtIsSet(true);
+        setApiServiceIsAuthenticated(true);
       });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -106,8 +113,8 @@ export function App() : JSX.Element {
         <NotificationContext.Provider value={{setNotificationProps}}>
           <LoadingComponentWrapper isLoading={isLoading}>
             {
-              isAuthenticated ?
-                <LoadingComponentWrapper isLoading={!jwtIsSet}>
+              isAuthenticated || !features.Auth0 ?
+                <LoadingComponentWrapper isLoading={!apiServiceIsAuthenticated}>
                   <InvestmentsWallet /> 
                 </LoadingComponentWrapper> :
                 <Login />
