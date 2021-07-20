@@ -4,8 +4,7 @@
     "title": "Investments API",
     "version": "1.0"
   },
-  "security": [
-  ],
+  "security": [],
   "servers": [
     {
       "url": "http://localhost:3001"
@@ -77,16 +76,15 @@
             "name": "page"
           },
           {
-          "schema": {
-            "type": "number"
-          },
-          "in": "query",
-          "name": "perPage"
+            "schema": {
+              "type": "number"
+            },
+            "in": "query",
+            "name": "perPage"
           }
         ]
       },
-      "parameters": [
-      ],
+      "parameters": [],
       "post": {
         "summary": "Create Investment",
         "operationId": "post-investments",
@@ -194,6 +192,36 @@
           "Investments"
         ]
       }
+    },
+    "/investmentsSummary": {
+      "get": {
+        "summary": "Get Investments Summary",
+        "tags": ["Investments"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string"
+                      },
+                      "sum": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-investmentsSummary"
+      }
     }
   },
   "components": {
@@ -202,10 +230,8 @@
         "type": "oauth2",
         "flows": {
           "implicit": {
-            "authorizationUrl": "https://dev-8z6e9jdt.us.auth0.com/authorize?audience=Investments%20API",
-            "scopes": {
-              "test": "test"
-            }
+            "authorizationUrl": "https://dev-8z6e9jdt.us.auth0.com/authorize?audience=https%3A%2F%2Fhenriqueinonhe.com.br",
+            "scopes": {}
           }
         }
       }
