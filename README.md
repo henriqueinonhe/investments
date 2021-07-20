@@ -95,7 +95,7 @@ For development purposes you may copy the content from `.env-sample` (present in
 
 Nevertheless, should you need to tweak them, here's their documentation:
 
-#### 4.1.1 API Environment Variables
+#### 4.1.1 API
 
 - **PORT** - Port used by the server (if you're running the API inside a container don't forget that this refers to the port **inside** the container, not the one you're going to use to access the API).
 - **USE_HTTPS** - Whether the server will run with https (in which case you'll need to generate the certificates)
@@ -116,14 +116,14 @@ Nevertheless, should you need to tweak them, here's their documentation:
 - **AUTH0_AUDIENCE** - Auth0 related config. See [more](https://auth0.com/docs/quickstart/backend/nodejs).
 - **AUTH0_ISSUER** - Auth0 related config. See [more](https://auth0.com/docs/quickstart/backend/nodejs).
 
-#### 4.1.2 DB Environment Variables
+#### 4.1.2 DB
 
 - **MYSQL_USER** - DB user.
 - **MYSQL_PASSWORD** - DB password.
 - **MYSQL_ROOT_PASSWORD** - DB root user password.
 - **MYSQL_DATABASE** Self explanatory.
 
-#### 4.1.3 Frontend Environment Variables
+#### 4.1.3 Frontend
 
 - **PORT** - Port used by the development server (if you're running the Frontend inside a container don't forget that this refers to the port **inside** the container, not the one you're going to use to access the Frontend).
 - **USE_HTTPS** - Whether the development server will use HTTPS (Webpack generates certificates by itself).
