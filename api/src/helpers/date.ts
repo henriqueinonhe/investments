@@ -10,8 +10,9 @@ export function isValidDate(date ?: string) : boolean {
     .min(defaultStartDate)
     .max(defaultEndDate)
     .validate(date);
-  
+
+    
   const hasRightFormat = /^\d{1,4}-\d\d-\d\d$/.test(date);
   
-  return error !== undefined && hasRightFormat;
+  return error === undefined && hasRightFormat;
 }

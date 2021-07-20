@@ -67,7 +67,7 @@ export class InvestmentsService {
       value: Joi.number()
         .positive()
         .required()
-    }).required();
+    }).required().unknown();
 
     const { error } = investmentSchema.validate(investment);
 

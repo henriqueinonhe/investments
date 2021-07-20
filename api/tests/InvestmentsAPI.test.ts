@@ -1,16 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { clearDb, populateInvestments, connect } from "./helpers/db";
+import { clearDb, populateInvestments, connection, createConnection } from "./helpers/db";
 import { baseClient } from "./helpers/apiBaseClient";
 import { InvestmentCreationData } from "../src/services/InvestmentsService";
 import { AxiosResponse } from "axios";
 import { randomInvestmentCreationData, randomList, randomString } from "./helpers/random";
 import { checkHasValidationErrorEntryCode } from "./helpers/validationErrors";
-import { forEach, random as randomNumber } from "lodash";
+import { random as randomNumber } from "lodash";
 import { isValidDate } from "../src/helpers/date";
 import { InvestmentsRepository } from "../src/repositories/InvestmentsRepository";
+import { getCustomRepository } from "typeorm";
+import { isEqual } from "lodash";
+import { Investment } from "../src/entities/Investment";
+import { env } from "../src/env";
 
-afterEach(async () => {
-  await clearDb();
+beforeAll(async () => {
+  await createConnection();
+});
+
+afterAll(async () => {
+  await connection().close();
 });
 
 describe("Create Investment", () => {
@@ -20,6 +28,10 @@ describe("Create Investment", () => {
   //environment as closely as possible
   beforeAll(async () => {
     await populateInvestments();
+  });
+
+  afterAll(async () => {
+    await clearDb();
   });
 
   const createInvestment = async (investment : InvestmentCreationData) : Promise<AxiosResponse> => {
@@ -135,18 +147,39 @@ describe("Create Investment", () => {
 
   describe("Post Conditions", () => {
     test("Investments are properly created", async () => {
-      const investments = randomList(randomInvestmentCreationData, 100);
-      investments.forEach(async investment => {
+      const investments = randomList(randomInvestmentCreationData, 10);
+      const createdInvestments = await Promise.all(investments.map(async investment => {
         const response = await createInvestment(investment);
-
         expect(response.status).toBe(201);
-      });
 
-      const connection =  await connect();
-      const investmentsRepository = connection.getCustomRepository(InvestmentsRepository);
-      const rawExistingInvestments = await investmentsRepository.find({});
-      console.log(rawExistingInvestments.length);
+        return response.data;
+      }));
+
+      const formattedCreatedInvestments : Array<InvestmentCreationData> = createdInvestments.map(investment => ({
+        identifier: investment.identifier,
+        type: investment.type,
+        value: investment.value,
+        date: investment.date,
+        user: env.MOCKED_USER
+      }));
+
+      expect(investments).toEqual(formattedCreatedInvestments);
+
+      const investmentsRepository = connection().getCustomRepository(InvestmentsRepository);
+      const existingInvestments = await investmentsRepository.find();
       
+      const formattedExistingInvestments = existingInvestments.map(investment => ({
+        id: investment.id,
+        identifier: investment.identifier,
+        type: investment.type,
+        value: investment.value,
+        date: investment.date.toISOString().slice(0, 10),
+        user: env.MOCKED_USER
+      }));
+
+      createdInvestments.forEach(investment => {
+        expect(formattedExistingInvestments.some(e => isEqual(e, investment)));
+      });
     });
   });
 });

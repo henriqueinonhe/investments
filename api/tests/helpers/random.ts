@@ -13,7 +13,7 @@ export function randomMonthString() : string {
 }
 
 export function randomDayString() : string {
-  return new RandExp(/(0[1-9])|((1|2)[0-9])|/).gen();
+  return new RandExp(/(0[1-9])|((1|2)[0-9])/).gen();
 }
 
 export function randomIdentifier() : string {
