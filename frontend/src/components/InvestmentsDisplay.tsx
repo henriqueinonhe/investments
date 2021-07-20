@@ -86,7 +86,7 @@ export function InvestmentsDisplay(props : InvestmentsDisplayProps) : JSX.Elemen
 
   const investmentGroups = groupInvestmentsByDate(investments);
   const sortedInvestmentGroups = investmentGroups.slice().sort((first, second) => 
-    Dayjs(first.date).isSameOrBefore(Dayjs(second.date)) ? -1 : 1);
+    Dayjs(first.date).isSameOrBefore(Dayjs(second.date)) ? 1 : -1);
 
   return (
     <Container>

@@ -153,7 +153,7 @@ export class InvestmentsService {
         date: Between(startDate, endDate)
       },
       order: {
-        date: "ASC"
+        date: "DESC"
       },
       skip: perPage * (page - 1),
       take: perPage
