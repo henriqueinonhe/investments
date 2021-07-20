@@ -2,6 +2,7 @@ import { ValidationError } from "../exceptions/ValidationError.js";
 import { AuthenticationError } from "../exceptions/AuthenticationError.js";
 import { ResourceNotFoundError } from "../exceptions/ResourceNotFoundError.js";
 import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
+import { inspect } from "util";
 
 export async function handleError(error : ErrorRequestHandler, 
                                   req : Request, 
@@ -15,7 +16,7 @@ export async function handleError(error : ErrorRequestHandler,
       body: req.body,
       ip: req.ip
     },
-    error
+    error: inspect(error)
   });
 
   if(error instanceof ValidationError) {
