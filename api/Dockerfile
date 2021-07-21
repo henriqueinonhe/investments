@@ -8,5 +8,6 @@ RUN npm ci
 RUN npx tsc -p .
 
 EXPOSE 80
+EXPOSE 443
 
 CMD ["node", "./dist/index.js"]
