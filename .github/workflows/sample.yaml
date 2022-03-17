@@ -1,0 +1,33 @@
+name: Test
+on: [push]
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Install
+        run: |
+          cp ./api/.env-sample ./api/.env
+          cp ./db/.env-sample ./db/.env
+          cp ./frontend/.env-sample ./frontend/.env
+
+      - name: Generate SSL Certificate
+        run: |
+          cd api
+          mkdir certs && cd certs
+          openssl req -nodes -new -x509 -keyout server.key -out server.cert
+          cd .. 
+          cd ..
+
+      - name: Start Application
+        run: docker-compose up
+
+      - name: Run Migrations
+        run: |
+          docker exec InvestmentsAPI npx typeorm migration:run
+          docker restart InvestmentsAPI
+
+      - name: Test
+        run: docker exec InvestmentsAPI npx jest
