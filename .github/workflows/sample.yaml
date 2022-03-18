@@ -13,21 +13,12 @@ jobs:
           cp ./db/.env-sample ./db/.env
           cp ./frontend/.env-sample ./frontend/.env
 
-      - name: Generate SSL Certificate
-        run: |
-          cd api
-          mkdir certs && cd certs
-          openssl req -nodes -new -x509 -keyout server.key -out server.cert
-          cd .. 
-          cd ..
-
       - name: Start Application
-        run: docker-compose up
-
-      - name: Run Migrations
         run: |
+          docker-compose up -d
+          sleep 40s
+          docker ps -a
           docker exec InvestmentsAPI npx typeorm migration:run
           docker restart InvestmentsAPI
-
-      - name: Test
-        run: docker exec InvestmentsAPI npx jest
+          docker exec InvestmentsAPI npx jest
+        shell: bash
